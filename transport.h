@@ -9,6 +9,15 @@ typedef struct cliente
     char sexo[10];
 }Cliente;
 
+typedef struct entrega
+{
+    char nome[50];
+    char endereco[50];
+    char dataEntrega[15];
+    char horaEntrega[15];
+    char status[15];
+}Entrega;
+
 typedef struct no_simples
 {
     Cliente cliente;
@@ -16,16 +25,16 @@ typedef struct no_simples
 
 }No_Simples;
 
-typedef struct no{
-    int info;
-    struct no *prox;
-}No;
+typedef struct rota{
+    Entrega entrega;
+    struct rota *prox;
+}Rota;
 
 
 typedef struct fila{
     int info;
-    struct no *inicio;
-    struct no *fim;
+    struct rota *inicio;
+    struct rota *fim;
 }Fila;
 
 
