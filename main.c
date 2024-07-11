@@ -25,6 +25,18 @@ int main(){
                 case 1:
                     lista_pessoa = add_no_fim_pessoa(lista_pessoa);
                     break;
+
+                case 3:
+                    if (lista_pessoa == NULL){
+                        printf("Não há clientes cadastrados!\n");
+                    }
+
+                    else{
+                        editar_cliente_avulso(lista_pessoa);
+                    }
+
+                    break;
+
                 case 4:
                     if (lista_pessoa==NULL)
                     {
