@@ -171,18 +171,25 @@ void listar_clientes_pessoa(No_simples_clientes_pessoas *lista){
 void listar_clientes_org(No_simples_clientes_organizacoes *lista){
     No_simples_clientes_organizacoes *aux;
     aux = lista;
+
+    printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║             NOME             ║      CNPJ       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║     STATUS    ║  ENTREGAS  ║\n");
+    printf("╠═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+
     while (aux)
     {
-        printf("NOME: %s\n",aux->cliente.nome);
-        printf("CNPJ: %s\n",aux->cliente.cnpj);
-        printf("TELEFONE: %s\n",aux->cliente.telefone);
-        printf("ENDERECO: %s\n",aux->cliente.endereco);
-        printf("EMAIL: %s\n",aux->cliente.email);
-        printf("STATUS: %s\n",aux->cliente.status_organizacao);
-        printf("ENTREGAS: %d\n",aux->cliente.conta_entregas);
-        printf("\n");
-        aux=aux->prox;
+        printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-13s ║ %-10d ║\n",
+        aux->cliente.nome,
+        aux->cliente.cnpj,
+        aux->cliente.telefone,
+        aux->cliente.endereco,
+        aux->cliente.email,
+        aux->cliente.status_organizacao,
+        aux->cliente.conta_entregas);
+        aux = aux->prox;
     }
+
+    printf("╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
     
 }
 

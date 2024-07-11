@@ -26,7 +26,13 @@ int main(){
                     lista_pessoa = add_no_fim_pessoa(lista_pessoa);
                     break;
                 case 4:
-                    listar_clientes_pessoa(lista_pessoa);
+                    if (lista_pessoa==NULL)
+                    {
+                        printf("NÃO HA CLIENTES CADASTRADOS !!\n\n");
+                    }
+                    else{
+                        listar_clientes_pessoa(lista_pessoa);
+                    }
                     break;
 
                 default:
@@ -46,7 +52,13 @@ int main(){
                     lista_organizacao = add_no_fim_org(lista_organizacao);
                     break;
                 case 4:
-                    listar_clientes_org(lista_organizacao);
+                    if (lista_organizacao==NULL)
+                    {
+                        printf("NÃO HA ORGANIZAÇÕES CADASTRADOS !!\n\n");
+                    }
+                    else{
+                        listar_clientes_org(lista_organizacao);
+                    }
                     break;
                 
                 default:
