@@ -60,7 +60,10 @@ int main(){
                 switch (op2)
                 {
                 case 1:
-                    lista_organizacao = add_no_fim_organizacao(lista_organizacao);
+                    lista_organizacao = add_no_fim_org(lista_organizacao);
+                    break;
+                case 4:
+                    listar_clientes_organizacao(lista_organizacao);
                     break;
                 
                 default:

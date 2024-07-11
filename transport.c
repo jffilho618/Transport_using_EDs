@@ -13,6 +13,28 @@ No_simples_clientes_organizacoes *cria_lista_organizacao(){
 
 
 No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *l){
+    char cpf[15];
+    int cont=0;
+    printf("INFORME O CPF DO CLIENTE: ");
+    scanf(" %[^\n]",cpf);
+    printf("\n");
+
+    No_simples_clientes_pessoas *aux2;
+    aux2 = l;
+    while (aux2)
+    {
+        if (strcmp(aux2->cliente.cpf,cpf)==0)
+        {
+            cont++;
+        }
+        aux2=aux2->prox;
+    }
+    if (cont>0)
+    {
+        printf("CLIENTE JA CADASTRADO !!\n\n");
+        return l;
+    }
+
     No_simples_clientes_pessoas *aux,*novo = (No_simples_clientes_pessoas*) malloc(sizeof(No_simples_clientes_pessoas));
     novo->prox=NULL;
 
@@ -20,9 +42,7 @@ No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *l){
     scanf(" %[^\n]",novo->cliente.nome);
     printf("\n");
 
-    printf("INFORME O CPF DO CLIENTE: ");
-    scanf(" %[^\n]",novo->cliente.cpf);
-    printf("\n");
+    strcpy(novo->cliente.cpf,cpf);
 
     printf("INFORME O TELEFONE DO CLIENTE: ");
     scanf(" %[^\n]",novo->cliente.telefone);
@@ -65,6 +85,29 @@ No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *l){
 }
 
 No_simples_clientes_organizacoes *add_no_fim_org(No_simples_clientes_organizacoes *l){
+    char cnpj[20];
+    int cont=0;
+    printf("INFORME O CNPJ DA ORGANIZACAO: ");
+    scanf(" %[^\n]",cnpj);
+    printf("\n");
+
+    No_simples_clientes_organizacoes *aux2;
+    aux2 = l;
+    while (aux2)
+    {
+        if (strcmp(aux2->cliente.cnpj,cnpj)==0)
+        {
+            cont++;
+        }
+        aux2=aux2->prox;
+    }
+
+    if (cont>0)
+    {
+        printf("ORGANIZACAO JA CADASTRADA !!\n\n");
+        return l;
+    }
+    
     No_simples_clientes_organizacoes *aux,*novo = (No_simples_clientes_organizacoes*) malloc(sizeof(No_simples_clientes_organizacoes));
     novo->prox=NULL;
     
@@ -72,9 +115,7 @@ No_simples_clientes_organizacoes *add_no_fim_org(No_simples_clientes_organizacoe
     scanf(" %[^\n]",novo->cliente.nome);
     printf("\n");
 
-    printf("INFORME O CNPJ DA ORGANIZACAO: ");
-    scanf(" %[^\n]",novo->cliente.cnpj);
-    printf("\n");
+    strcpy(novo->cliente.cnpj,cnpj);
 
     printf("INFORME O TELEFONE DA ORGANIZACAO: ");
     scanf(" %[^\n]",novo->cliente.telefone);
@@ -125,6 +166,24 @@ void listar_clientes_pessoa(No_simples_clientes_pessoas *lista){
         printf("EMAIL: %s\n",aux->cliente.email);
         printf("SEXO: %s\n",aux->cliente.sexo);
         printf("STATUS: %s\n",aux->cliente.status_cliente);
+        printf("ENTREGAS: %d\n",aux->cliente.conta_entregas);
+        printf("\n");
+        aux=aux->prox;
+    }
+    
+}
+
+void listar_clientes_org(No_simples_clientes_organizacoes *lista){
+    No_simples_clientes_organizacoes *aux;
+    aux = lista;
+    while (aux)
+    {
+        printf("NOME: %s\n",aux->cliente.nome);
+        printf("CNPJ: %s\n",aux->cliente.cnpj);
+        printf("TELEFONE: %s\n",aux->cliente.telefone);
+        printf("ENDERECO: %s\n",aux->cliente.endereco);
+        printf("EMAIL: %s\n",aux->cliente.email);
+        printf("STATUS: %s\n",aux->cliente.status_organizacao);
         printf("ENTREGAS: %d\n",aux->cliente.conta_entregas);
         printf("\n");
         aux=aux->prox;
