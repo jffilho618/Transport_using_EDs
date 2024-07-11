@@ -67,13 +67,12 @@ void fila_libera(Fila* f);
 
 No_simples_clientes_pessoas *cria_lista_pessoa();
 No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *lista);
-void Adicionar_cliente_pessoa(No_simples_clientes_pessoas *lista);
 void listar_clientes_pessoa(No_simples_clientes_pessoas *lista);
 
 No_simples_clientes_organizacoes *cria_lista_organizacao();
 No_simples_clientes_organizacoes *add_no_fim_org(No_simples_clientes_organizacoes *lista);
 void Adicionar_cliente_organizacao();
-void Exibir_Cliente_organizacao(No_simples_clientes_organizacoes *lista, char cnpj);
+void listar_clientes_org(No_simples_clientes_organizacoes *lista);
 
 
 
