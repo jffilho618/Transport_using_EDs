@@ -11,24 +11,14 @@ int main(){
 
     do
     {
-        printf("[1] MENU CLIENTE PESSOA\n");
-        printf("[2] MENU CLIENTE ORGANIZACAO\n");
-        printf("[3] SOBRE\n");
-        printf("[0] SAIR\n");
+        menu_principal();
         scanf("%d",&op);
         switch (op)
         {
         case 1:
             do
             {
-                printf("[1] ADICINOAR CLIENTE PESSOA\n");
-                printf("[2] REMOVER CLIENTE PESSOA\n");
-                printf("[3] EDITAR CLIENTE PESSOA\n");
-                printf("[4] LISTAR CLIENTES PESSOA\n");
-                printf("[5] CONSULTAR CLIENTE PESSOA\n");
-                printf("[6] CONSULTAR HISTORICO DE PEDIDOS DO CLIENTE PESSOA\n");
-                printf("[7] REALIZAR POSTAGEM POR PESSOA\n");
-                printf("[0] SAIR\n");
+                menu_cliente_pessoa();
                 scanf("%d",&op2);
                 switch (op2)
                 {
@@ -48,14 +38,7 @@ int main(){
         case 2:
             do
             {
-                printf("[1] ADICINOAR CLIENTE ORGANIZACAO\n");
-                printf("[2] REMOVER CLIENTE ORGANIZACAO\n");
-                printf("[3] EDITAR CLIENTE ORGANIZACAO\n");
-                printf("[4] LISTAR CLIENTES ORGANIZACAO\n");
-                printf("[5] CONSULTAR CLIENTE ORGANIZACAO\n");
-                printf("[6] CONSULTAR HISTORICO DE PEDIDOS DO CLIENTE ORGANIZACAO\n");
-                printf("[7] REALIZAR POSTAGEM POR ORGANIZACAO\n");
-                printf("[0] SAIR\n");
+                menu_organizacao();
                 scanf("%d",&op2);
                 switch (op2)
                 {
@@ -63,7 +46,7 @@ int main(){
                     lista_organizacao = add_no_fim_org(lista_organizacao);
                     break;
                 case 4:
-                    listar_clientes_organizacao(lista_organizacao);
+                    listar_clientes_org(lista_organizacao);
                     break;
                 
                 default:

@@ -58,6 +58,9 @@ typedef struct fila{
     struct rota *fim;
 }Fila;
 
+void menu_principal();
+void menu_organizacao();
+void menu_cliente_pessoa();
 
 Fila* fila_cria(void);
 void fila_insere(Fila* f, float v);
@@ -71,7 +74,6 @@ void listar_clientes_pessoa(No_simples_clientes_pessoas *lista);
 
 No_simples_clientes_organizacoes *cria_lista_organizacao();
 No_simples_clientes_organizacoes *add_no_fim_org(No_simples_clientes_organizacoes *lista);
-void Adicionar_cliente_organizacao();
 void listar_clientes_org(No_simples_clientes_organizacoes *lista);
 
 
