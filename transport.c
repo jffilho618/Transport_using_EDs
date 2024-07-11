@@ -17,7 +17,6 @@ No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *l){
     int cont=0;
     printf("INFORME O CPF DO CLIENTE: ");
     scanf(" %[^\n]",cpf);
-    printf("\n");
 
     No_simples_clientes_pessoas *aux2;
     aux2 = l;
@@ -40,25 +39,20 @@ No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *l){
 
     printf("INFORME O NOME DO CLIENTE: ");
     scanf(" %[^\n]",novo->cliente.nome);
-    printf("\n");
 
     strcpy(novo->cliente.cpf,cpf);
 
     printf("INFORME O TELEFONE DO CLIENTE: ");
     scanf(" %[^\n]",novo->cliente.telefone);
-    printf("\n");
 
     printf("INFORME O ENDERECO DO CLIENTE: ");
     scanf(" %[^\n]",novo->cliente.endereco);
-    printf("\n");
 
     printf("INFORME O EMAIL DO CLIENTE: ");
     scanf(" %[^\n]",novo->cliente.email);
-    printf("\n");
 
     printf("INFORME O SEXO DO CLIENTE: ");
     scanf(" %[^\n]",novo->cliente.sexo);
-    printf("\n");
 
     strcpy(novo->cliente.status_cliente,"ATIVO");
     novo->cliente.conta_entregas=0;
@@ -89,7 +83,6 @@ No_simples_clientes_organizacoes *add_no_fim_org(No_simples_clientes_organizacoe
     int cont=0;
     printf("INFORME O CNPJ DA ORGANIZACAO: ");
     scanf(" %[^\n]",cnpj);
-    printf("\n");
 
     No_simples_clientes_organizacoes *aux2;
     aux2 = l;
@@ -113,21 +106,17 @@ No_simples_clientes_organizacoes *add_no_fim_org(No_simples_clientes_organizacoe
     
     printf("INFORME O NOME DA ORGANIZACAO: ");
     scanf(" %[^\n]",novo->cliente.nome);
-    printf("\n");
 
     strcpy(novo->cliente.cnpj,cnpj);
 
     printf("INFORME O TELEFONE DA ORGANIZACAO: ");
     scanf(" %[^\n]",novo->cliente.telefone);
-    printf("\n");
 
     printf("INFORME O ENDERECO DA ORGANIZACAO: ");
     scanf(" %[^\n]",novo->cliente.endereco);
-    printf("\n");
 
     printf("INFORME O EMAIL DA ORGANIZACAO: ");
     scanf(" %[^\n]",novo->cliente.email);
-    printf("\n");
 
     strcpy(novo->cliente.status_organizacao,"ATIVO");
     novo->cliente.conta_entregas=0;
@@ -157,20 +146,26 @@ No_simples_clientes_organizacoes *add_no_fim_org(No_simples_clientes_organizacoe
 void listar_clientes_pessoa(No_simples_clientes_pessoas *lista){
     No_simples_clientes_pessoas *aux;
     aux = lista;
+    printf("╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║             NOME             ║       CPF       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║      SEXO      ║     STATUS    ║  ENTREGAS  ║\n");
+    printf("╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+
     while (aux)
     {
-        printf("NOME: %s\n",aux->cliente.nome);
-        printf("CPF: %s\n",aux->cliente.cpf);
-        printf("TELEFONE: %s\n",aux->cliente.telefone);
-        printf("ENDERECO: %s\n",aux->cliente.endereco);
-        printf("EMAIL: %s\n",aux->cliente.email);
-        printf("SEXO: %s\n",aux->cliente.sexo);
-        printf("STATUS: %s\n",aux->cliente.status_cliente);
-        printf("ENTREGAS: %d\n",aux->cliente.conta_entregas);
-        printf("\n");
-        aux=aux->prox;
+        printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-14s ║ %-13s ║ %-10d ║\n",
+        aux->cliente.nome,
+        aux->cliente.cpf,
+        aux->cliente.telefone,
+        aux->cliente.endereco,
+        aux->cliente.email,
+        aux->cliente.sexo,
+        aux->cliente.status_cliente,
+        aux->cliente.conta_entregas);
+        aux = aux->prox;
     }
-    
+
+    printf("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
+
 }
 
 void listar_clientes_org(No_simples_clientes_organizacoes *lista){
@@ -189,4 +184,46 @@ void listar_clientes_org(No_simples_clientes_organizacoes *lista){
         aux=aux->prox;
     }
     
+}
+
+void menu_principal()
+{
+    printf("╔══════════════════════════════════════╗\n");
+    printf("║         MENU TRANSPORTADORA          ║\n");
+    printf("╠══════════════════════════════════════╣\n");
+    printf("║ [1] MENU DO CLIENTE PESSOA           ║\n");
+    printf("║ [2] MENU DO CLIENTE ORGANIZAÇÃO      ║\n");
+    printf("║ [3] SOBRE                            ║\n");
+    printf("║ [0] SAIR                             ║\n");
+    printf("╚══════════════════════════════════════╝\n\n");
+}
+
+void menu_organizacao(){
+    printf("╔══════════════════════════════════════╗\n");
+    printf("║           MENU ORGANIZAÇÃO           ║\n");
+    printf("╠══════════════════════════════════════╣\n");
+    printf("║ [1] ADICINOAR CLIENTE ORGANIZACAO    ║\n");
+    printf("║ [2] REMOVER CLIENTE ORGANIZACAO      ║\n");
+    printf("║ [3] EDITAR CLIENTE ORGANIZACAO       ║\n");
+    printf("║ [4] LISTAR CLIENTES ORGANIZACAO      ║\n");
+    printf("║ [5] CONSULTAR CLIENTE ORGANIZACAO    ║\n");
+    printf("║ [6] HISTORICO DE PEDIDOS ORGANIZAÇÃO ║\n");
+    printf("║ [7] REALIZAR POSTAGEM ORGANIZACAO    ║\n");
+    printf("║ [0] SAIR                             ║\n");
+    printf("╚══════════════════════════════════════╝\n\n");
+}
+
+void menu_cliente_pessoa(){
+    printf("╔══════════════════════════════════════╗\n");
+    printf("║             MENU CLIENTE             ║\n");
+    printf("╠══════════════════════════════════════╣\n");
+    printf("║ [1] ADICINOAR CLIENTE PESSOA         ║\n");
+    printf("║ [2] REMOVER CLIENTE PESSOA           ║\n");
+    printf("║ [3] EDITAR CLIENTE PESSOA            ║\n");
+    printf("║ [4] LISTAR CLIENTES PESSOA           ║\n");
+    printf("║ [5] CONSULTAR CLIENTE PESSOA         ║\n");
+    printf("║ [6] HISTORICO DE PEDIDOS CLIENTE     ║\n");
+    printf("║ [7] REALIZAR POSTAGEM POR PESSOA     ║\n");
+    printf("║ [0] SAIR                             ║\n");
+    printf("╚══════════════════════════════════════╝\n\n");
 }
