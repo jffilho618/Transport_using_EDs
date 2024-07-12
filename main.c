@@ -4,7 +4,7 @@
 
 
 int main(){
-    int op,op2,op3,op4,op5;
+    int op,op2,op3,op4,op5,op6, op7;;
 
     No_simples_clientes_organizacoes *lista_organizacao = cria_lista_organizacao();
     No_simples_clientes_pessoas *lista_pessoa = cria_lista_pessoa();
@@ -24,7 +24,36 @@ int main(){
                 {
                 case 1:
                     lista_pessoa = add_no_fim_pessoa(lista_pessoa);
-                    break;
+                    break; 
+                case 2: 
+                    if (lista_pessoa == NULL){
+                        printf("Não há clientes cadastrados!\n");
+                    }
+
+                    else{ 
+                        menu_editar_status_cliente_avulso(); 
+                        scanf("%d", &op6);                         
+                        switch(op6){ 
+                            do{
+                            case 1: 
+                               //pesquisar pelo CPF 
+                               editar_status_cliente_avulso(lista_pessoa, 1);
+                               break; 
+                            case 2: 
+                               //Pesquisar pelo Nome  
+                               editar_status_cliente_avulso(lista_pessoa, 2);
+                               break; 
+                            case 0: 
+                               break;   
+                            default: 
+                               printf("Entrada inválida"); 
+                               break; 
+                            
+                            }while(op6 != 0);
+
+                        }
+                    }
+                    break;    
                     
                 case 3:
                     if (lista_pessoa == NULL){
@@ -90,6 +119,33 @@ int main(){
                 case 1:
                     lista_organizacao = add_no_fim_org(lista_organizacao);
                     break;
+                case 2: 
+                    if (lista_organizacao == NULL) {
+                        printf("NÃO HÁ ORGANIZAÇÕES CADASTRADAS !!\n\n");
+                    } else { 
+                        do{
+                        menu_editar_status_cliente_Organizacao(); 
+                        
+                            scanf("%d", &op7);                         
+                            switch (op7) { 
+                                case 1: 
+                                    // Pesquisar pelo CNPJ 
+                                    editar_status_cliente_organizacao(lista_organizacao, 1);
+                                    break; 
+                                case 2: 
+                                    // Pesquisar pelo Nome Fantasia 
+                                    editar_status_cliente_organizacao(lista_organizacao, 2);
+                                    break; 
+                                case 0: 
+                                    break;   
+                                default: 
+                                    printf("Entrada inválida\n"); 
+                                    break; 
+                            }
+                        } while (op7 != 0);
+                    }
+                    break;
+                    
 
                 case 3:
                     if (lista_organizacao == NULL){
