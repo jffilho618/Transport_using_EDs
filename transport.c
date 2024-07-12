@@ -2,7 +2,45 @@
 #include "transport.h"
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
+
+char* obter_hora_atual() {
+    time_t tempo_bruto;
+    struct tm *info_tempo;
+    static char hora_str[9]; // "HH:MM:SS" + terminador nulo
+
+    // Obter a hora atual
+    time(&tempo_bruto);
+    // Converter para o formato de hora local
+    info_tempo = localtime(&tempo_bruto);
+
+    // Formatar a hora como "HH:MM:SS"
+    strftime(hora_str, sizeof(hora_str), "%H:%M:%S", info_tempo);
+
+    return hora_str;
+}
+
+char* obter_data_atual() {
+    time_t tempo_bruto;
+    struct tm *info_tempo;
+    char *data_str = malloc(11 * sizeof(char)); // Alocar memória para "DD/MM/AAAA" + terminador nulo
+
+    if (data_str == NULL) {
+        fprintf(stderr, "Erro ao alocar memória\n");
+        exit(1);
+    }
+
+    // Obter a data atual
+    time(&tempo_bruto);
+    // Converter para o formato de data local
+    info_tempo = localtime(&tempo_bruto);
+
+    // Formatar a data como "DD/MM/AAAA"
+    strftime(data_str, 11, "%d/%m/%Y", info_tempo);
+
+    return data_str;
+}
 
 No_simples_clientes_pessoas *cria_lista_pessoa(){
     return NULL;
@@ -200,8 +238,21 @@ void menu_principal()
     printf("╠══════════════════════════════════════╣\n");
     printf("║ [1] MENU DO CLIENTE PESSOA           ║\n");
     printf("║ [2] MENU DO CLIENTE ORGANIZAÇÃO      ║\n");
-    printf("║ [3] SOBRE                            ║\n");
+    printf("║ [3] MENU ENTREGAS                    ║\n");
+    printf("║ [4] SOBRE                            ║\n");
     printf("║ [0] SAIR                             ║\n");
+    printf("╚══════════════════════════════════════╝\n\n");
+}
+
+void menu_entregas(){
+    printf("╔══════════════════════════════════════╗\n");
+    printf("║            MENU ENTREGAS             ║\n");
+    printf("╠══════════════════════════════════════╣\n");
+    printf("║ [1] PEDIDOS ESPERANDO ENTREGA        ║\n");
+    printf("║ [2] REALIZAR ENTREGA                 ║\n");
+    printf("║ [3] HISTORICO DE ENTREGAS POR PESSOA ║\n");
+    printf("║ [4] HISTORICO DE ENTREGAS POR ORG    ║\n");
+    printf("║ [0] MENU ANTERIOR                    ║\n");
     printf("╚══════════════════════════════════════╝\n\n");
 }
 
@@ -956,3 +1007,191 @@ void editar_cliente_organizacao(No_simples_clientes_organizacoes *lista){
         
     } while (op != 0);
 }
+
+
+
+Fila* fila_cria(void){
+    Fila *f = (Fila*)malloc(sizeof(Fila));
+    f->inicio = NULL;
+    f->fim = NULL;
+    return f;
+}
+
+int fila_vazia(Fila* f){
+    if (f == NULL || f->inicio == NULL){
+        return 1;
+    }
+
+    return 0;
+}
+
+void fila_insere_ordenado(Fila* f, Entrega *entrega) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->entrega = entrega;
+    novo->prox = NULL;
+
+    // Se a fila estiver vazia
+    if (fila_vazia(f)) {
+        f->inicio = novo;
+        f->fim = novo;
+        return;
+    }
+
+    No *atual = f->inicio;
+    No *anterior = NULL;
+
+    // Percorrer a fila para encontrar a posição correta
+    while (atual != NULL && strcmp(atual->entrega->destinatario->cpf, entrega->destinatario->cpf) != 0) {
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    // Se inserindo no início da fila
+    if (anterior == NULL) {
+        novo->prox = f->inicio;
+        f->inicio = novo;
+    } else {
+        // Inserir no meio ou fim da fila
+        anterior->prox = novo;
+        novo->prox = atual;
+    }
+
+    // Ajustar o ponteiro do fim da fila, se necessário
+    if (novo->prox == NULL){
+        f->fim = novo;
+    }
+}
+
+Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *lista, int *conta_entregas){
+    if (lista == NULL){
+        printf("Não existem clientes cadastrados!\n");
+        return fila;
+    }
+
+    if (*conta_entregas == 10){
+        printf("Limite de postagens atingido!\n");
+        return fila;
+    }
+    
+
+    No_simples_clientes_pessoas *aux_remetente = lista;
+    char cpf[15];
+
+    printf("INFORME O CPF DO CLIENTE QUE DESEJA REALIZAR A POSTAGEM: ");
+    scanf(" %[^\n]", cpf);
+
+    while (aux_remetente != NULL && strcmp(aux_remetente->cliente.cpf, cpf) != 0){
+        aux_remetente = aux_remetente->prox;
+    }
+
+    if (aux_remetente == NULL){
+        printf("CLIENTE NÃO ENCONTRADO !\n");
+        return fila;
+    }
+
+    
+
+    
+    Entrega *entrega = (Entrega *)malloc(sizeof(Entrega));
+    entrega->remetente_pessoa = (Cliente_pessoa*) malloc(sizeof(Cliente_pessoa));
+    entrega->destinatario = (Cliente_pessoa*) malloc(sizeof(Cliente_pessoa));
+
+    if (entrega == NULL){
+        printf("Memória insuficiente!\n");
+        return fila;
+    }
+
+    printf("INFORME O NOME DO DESTINATÁRIO: ");
+    scanf(" %[^\n]", entrega->destinatario->nome);
+
+    printf("INFORME O CPF DO DESTINATÁRIO: ");
+    scanf(" %[^\n]", entrega->destinatario->cpf);
+
+    printf("INFORME O TELEFONE DO DESTINATÁRIO: ");
+    scanf(" %[^\n]", entrega->destinatario->telefone);
+
+    printf("INFORME O ENDEREÇO DO DESTINATÁRIO: ");
+    scanf(" %[^\n]", entrega->destinatario->endereco);
+
+    printf("INFORME O EMAIL DO DESTINATÁRIO: ");
+    scanf(" %[^\n]", entrega->destinatario->email);
+
+    printf("INFORME O SEXO DO DESTINATÁRIO: ");
+    scanf(" %[^\n]", entrega->destinatario->sexo);
+
+    strcpy(entrega->remetente_pessoa->nome, aux_remetente->cliente.nome);
+    strcpy(entrega->remetente_pessoa->cpf, aux_remetente->cliente.cpf);
+    strcpy(entrega->remetente_pessoa->telefone, aux_remetente->cliente.telefone);
+    strcpy(entrega->remetente_pessoa->endereco, aux_remetente->cliente.endereco);
+    strcpy(entrega->remetente_pessoa->email, aux_remetente->cliente.email);
+    strcpy(entrega->remetente_pessoa->sexo, aux_remetente->cliente.sexo);
+    entrega->horaPostagem = obter_hora_atual();
+    entrega->dataPostagem = obter_data_atual();
+
+    printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║                                       NOTA FISCAL                                                  ║\n");
+    printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+
+    printf("║ %-25s : %-56s               ║\n", "NOME DO REMETENTE", aux_remetente->cliente.nome);
+    printf("║ %-25s : %-56s               ║\n", "CPF DO REMETENTE", aux_remetente->cliente.cpf);
+    printf("║ %-25s : %-56s               ║\n", "TELEFONE DO REMETENTE", aux_remetente->cliente.telefone);
+    printf("║ %-26s : %-56s               ║\n", "ENDEREÇO DO REMETENTE", aux_remetente->cliente.endereco);
+    printf("║ %-25s : %-56s               ║\n", "EMAIL DO REMETENTE", aux_remetente->cliente.email);
+    printf("║ %-25s : %-56s               ║\n", "SEXO DO REMETENTE", aux_remetente->cliente.sexo);
+    printf("║ %-25s : %-56s               ║\n", "HORA DA POSTAGEM", entrega->horaPostagem);
+    printf("║ %-25s : %-56s               ║\n", "DATA DA POSTAGEM", entrega->dataPostagem);
+
+    printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+
+    printf("║ %-26s : %-56s               ║\n", "NOME DO DESTINATÁRIO", entrega->destinatario->nome);
+    printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", entrega->destinatario->cpf);
+    printf("║ %-26s : %-56s               ║\n", "TELEFONE DO DESTINATÁRIO", entrega->destinatario->telefone);
+    printf("║ %-27s : %-56s               ║\n", "ENDEREÇO DO DESTINATÁRIO", entrega->destinatario->endereco);
+    printf("║ %-26s : %-56s               ║\n", "EMAIL DO DESTINATÁRIO", entrega->destinatario->email);
+    printf("║ %-26s : %-56s               ║\n", "SEXO DO DESTINATÁRIO", entrega->destinatario->sexo);
+
+    printf("╚════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
+
+
+
+    int opcao;
+
+    printf("VOCE DESEJA REALIZAR A POSTAGEM ? (1-SIM, 2-NÃO): ");
+    scanf("%d", &opcao);
+
+    if(opcao == 2){
+        printf("POSTAGEM CANCELADA!\n");
+        free(entrega);
+        return fila;
+    }
+
+    fila_insere_ordenado(fila, entrega);
+    (*conta_entregas)++;
+    strcpy(entrega->status, "PENDENTE");
+
+
+    printf("POSTAGEM REALIZADA COM SUCESSO!\n");
+
+    return fila;
+}
+
+void imprimir_fila(Fila *f){
+    if (fila_vazia(f ))
+    {
+        printf("Fila vazia!\n");
+        return;
+    }
+    
+    No *atual = f->inicio;
+    while (atual != NULL) {
+        printf("CPF DESTINATÁRIO: %s, ENDEREÇO: %s, DATA: %s, HORA: %s, STATUS: %s\n", 
+                atual->entrega->destinatario->cpf, 
+                atual->entrega->destinatario->endereco, 
+                atual->entrega->dataPostagem, 
+                atual->entrega->horaPostagem,
+                atual->entrega->status);
+        atual = atual->prox;
+    }
+}
+
+

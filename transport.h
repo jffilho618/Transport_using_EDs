@@ -1,12 +1,3 @@
-typedef struct entrega
-{
-    char descricao[50];
-    int  id;
-    char dataEntrega[15];
-    char horaEntrega[15];
-    char status[15];
-    int score;
-}Entrega;
 typedef struct cliente_organizacao
 {
     char nome[50];
@@ -16,7 +7,7 @@ typedef struct cliente_organizacao
     char email[50];
     char status_organizacao[12];
     int conta_entregas;
-    Entrega *entregas;
+    //Entrega *entregas;
 }Cliente_organizacao;
 
 typedef struct cliente_pessoa
@@ -29,9 +20,23 @@ typedef struct cliente_pessoa
     char sexo[10];
     char status_cliente[12];
     int conta_entregas;
-    Entrega *entregas;
+    //Entrega *entregas;
 
 }Cliente_pessoa;
+typedef struct entrega
+{
+    int  id;
+    char *dataPostagem;
+    char *horaPostagem;
+    char dataEntrega[15];
+    char horaEntrega[15];
+    char status[15];
+    int score;
+    Cliente_pessoa *remetente_pessoa;
+    Cliente_pessoa *destinatario;
+    Cliente_organizacao *remetente_cliente_organizacao;
+}Entrega;
+
 
 typedef struct no_simples_clientes_pessoas
 {
@@ -46,16 +51,16 @@ typedef struct no_simples_clientes_organizacoes
     struct no_simples_clientes_organizacoes *prox;
 }No_simples_clientes_organizacoes;
 
-typedef struct rota{
-    Entrega entrega;
-    struct rota *prox;
-}Rota;
+typedef struct no{
+    Entrega *entrega;
+    struct no *prox;
+}No;
 
 
 typedef struct fila{
     int info;
-    struct rota *inicio;
-    struct rota *fim;
+    struct no *inicio;
+    struct no *fim;
 }Fila;
 
 
@@ -66,12 +71,16 @@ void menu_consulta_cliente();
 void menu_consulta_cliente_status();
 void menu_consulta_organizacao();
 void menu_consulta_organizacao_status();
+void menu_entregas();
+
 
 Fila* fila_cria(void);
+void fila_insere_ordenado(Fila* f, Entrega *entrega);
 void fila_insere(Fila* f, float v);
 float fila_retira(Fila** f);
 int fila_vazia(Fila* f);
 void fila_libera(Fila* f);
+void imprimir_fila(Fila *f);
 
 No_simples_clientes_pessoas *cria_lista_pessoa();
 No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *lista);
@@ -82,6 +91,8 @@ void consulta_cliente_status_inativo(No_simples_clientes_pessoas *lista);
 void consulta_cliente_status_ativo(No_simples_clientes_pessoas *lista);
 void menu_editar_cliente();
 void editar_cliente_avulso(No_simples_clientes_pessoas *lista);
+Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *lista, int *conta_entregas);
+
 
 No_simples_clientes_organizacoes *cria_lista_organizacao();
 No_simples_clientes_organizacoes *add_no_fim_org(No_simples_clientes_organizacoes *lista);

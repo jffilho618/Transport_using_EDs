@@ -4,10 +4,14 @@
 
 
 int main(){
-    int op,op2,op3,op4,op5,op6, op7;;
+    int op,op2,op3,op4,op5,op6, op7, op8;
+    int conta_entregas = 0;
+    int id_entrega = 0;
+    int id_entrega_[100];
 
     No_simples_clientes_organizacoes *lista_organizacao = cria_lista_organizacao();
     No_simples_clientes_pessoas *lista_pessoa = cria_lista_pessoa();
+    Fila *fila = fila_cria();
 
     do
     {
@@ -102,6 +106,11 @@ int main(){
                         }
                         break;
                     }
+                    break;
+                
+                case 7:
+                    fila = realizar_postagem_por_pessoa(fila, lista_pessoa, &conta_entregas);
+                    break;      
 
                 default:
                     break;
@@ -200,10 +209,22 @@ int main(){
                 }
             } while (op2!=0);
             break;
-        
+
+        case 3:
+            menu_entregas();
+            scanf("%d",&op8);
+            switch (op8)
+            {
+            case 1:
+                imprimir_fila(fila);
+                break;
+            }
+            break;
+
         default:
             break;
         }
+        
     } while (op!=0);
     
     return 0;
