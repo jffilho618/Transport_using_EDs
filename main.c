@@ -4,7 +4,7 @@
 
 
 int main(){
-    int op,op2;
+    int op,op2,op3,op4,op5;
 
     No_simples_clientes_organizacoes *lista_organizacao = cria_lista_organizacao();
     No_simples_clientes_pessoas *lista_pessoa = cria_lista_pessoa();
@@ -34,6 +34,33 @@ int main(){
                         listar_clientes_pessoa(lista_pessoa);
                     }
                     break;
+                case 5:
+                    menu_consulta_cliente();
+                    scanf("%d",&op3);
+                    switch (op3)
+                    {
+                    case 1:
+                        consulta_cliente_cpf(lista_pessoa);
+                        break;
+                    case 2:
+                        consulta_cliente_nome(lista_pessoa);
+                        break;
+                    case 3:
+                        menu_consulta_cliente_status();
+                        scanf("%d",&op4);
+                        switch (op4)
+                        {
+                        case 1:
+                            consulta_cliente_status_ativo(lista_pessoa);
+                            break;
+                        case 2:
+                            consulta_cliente_status_inativo(lista_pessoa);
+                            break;
+                        default:
+                            break;
+                        }
+                        break;
+                    }
 
                 default:
                     break;
@@ -60,6 +87,33 @@ int main(){
                         listar_clientes_org(lista_organizacao);
                     }
                     break;
+                case 5:
+                    menu_consulta_organizacao();
+                    scanf("%d",&op5);
+                    switch (op5)
+                    {
+                    case 1:
+                        consulta_org_cnpj(lista_organizacao);
+                        break;
+                    case 2:
+                        consulta_nome_org(lista_organizacao);
+                        break;
+                    case 3:
+                        menu_consulta_organizacao_status();
+                        scanf("%d",&op4);
+                        switch (op4)
+                        {
+                        case 1:
+                            consulta_org_status_ativo(lista_organizacao);
+                            break;
+                        case 2:
+                            consulta_org_status_inativo(lista_organizacao);
+                            break;
+                        default:
+                            break;
+                        }
+                        break;
+                    }
                 
                 default:
                     break;

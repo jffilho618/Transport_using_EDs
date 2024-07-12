@@ -58,9 +58,14 @@ typedef struct fila{
     struct rota *fim;
 }Fila;
 
+
 void menu_principal();
 void menu_organizacao();
 void menu_cliente_pessoa();
+void menu_consulta_cliente();
+void menu_consulta_cliente_status();
+void menu_consulta_organizacao();
+void menu_consulta_organizacao_status();
 
 Fila* fila_cria(void);
 void fila_insere(Fila* f, float v);
@@ -71,10 +76,20 @@ void fila_libera(Fila* f);
 No_simples_clientes_pessoas *cria_lista_pessoa();
 No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *lista);
 void listar_clientes_pessoa(No_simples_clientes_pessoas *lista);
+void consulta_cliente_cpf(No_simples_clientes_pessoas *lista);
+void consulta_cliente_nome(No_simples_clientes_pessoas *lista);
+void consulta_cliente_status_inativo(No_simples_clientes_pessoas *lista);
+void consulta_cliente_status_ativo(No_simples_clientes_pessoas *lista);
 
 No_simples_clientes_organizacoes *cria_lista_organizacao();
 No_simples_clientes_organizacoes *add_no_fim_org(No_simples_clientes_organizacoes *lista);
 void listar_clientes_org(No_simples_clientes_organizacoes *lista);
+void consulta_org_cnpj(No_simples_clientes_organizacoes *lista);
+void consulta_nome_org(No_simples_clientes_organizacoes *lista);
+void consulta_org_status_inativo(No_simples_clientes_organizacoes *lista);
+void consulta_org_status_ativo(No_simples_clientes_organizacoes *lista);
+
+
 
 
 
