@@ -114,6 +114,4 @@ void editar_status_cliente_avulso(No_simples_clientes_pessoas *lista, int opcao)
 void menu_editar_status_cliente_Organizacao(); 
 void editar_status_cliente_organizacao(No_simples_clientes_organizacoes *lista, int opcao);
 
-
-
-
+void sorteia_ids(int vet[], int n);
