@@ -209,8 +209,8 @@ void menu_organizacao(){
     printf("╔══════════════════════════════════════╗\n");
     printf("║           MENU ORGANIZAÇÃO           ║\n");
     printf("╠══════════════════════════════════════╣\n");
-    printf("║ [1] ADICINOAR CLIENTE ORGANIZACAO    ║\n");
-    printf("║ [2] REMOVER CLIENTE ORGANIZACAO      ║\n");
+    printf("║ [1] ADICIONAR CLIENTE ORGANIZACAO    ║\n");
+    printf("║ [2] MUDAR STATUS CLIENTE ORGANIZACAO ║\n");
     printf("║ [3] EDITAR CLIENTE ORGANIZACAO       ║\n");
     printf("║ [4] LISTAR CLIENTES ORGANIZACAO      ║\n");
     printf("║ [5] CONSULTAR CLIENTE ORGANIZACAO    ║\n");
@@ -224,8 +224,8 @@ void menu_cliente_pessoa(){
     printf("╔══════════════════════════════════════╗\n");
     printf("║             MENU CLIENTE             ║\n");
     printf("╠══════════════════════════════════════╣\n");
-    printf("║ [1] ADICINOAR CLIENTE PESSOA         ║\n");
-    printf("║ [2] REMOVER CLIENTE PESSOA           ║\n");
+    printf("║ [1] ADICIONAR CLIENTE PESSOA         ║\n");
+    printf("║ [2] MUDAR STATUS CLIENTE PESSOA      ║\n");
     printf("║ [3] EDITAR CLIENTE PESSOA            ║\n");
     printf("║ [4] LISTAR CLIENTES PESSOA           ║\n");
     printf("║ [5] CONSULTAR CLIENTE PESSOA         ║\n");
@@ -268,6 +268,176 @@ void menu_consulta_organizacao_status(){
     printf("║ [0] MENU ANTERIOR                    ║\n");
     printf("╚══════════════════════════════════════╝\n\n");
 }
+
+void menu_editar_status_cliente_avulso(){
+    printf("╔══════════════════════════════════════╗\n");
+    printf("║ [1] BUSCAR PELO CPF                  ║\n");
+    printf("║ [2] CONSULTAR PELO NOME              ║\n");
+    printf("║ [0] MENU ANTERIOR                    ║\n");
+    printf("╚══════════════════════════════════════╝\n\n");
+} 
+
+void menu_editar_status_cliente_Organizacao(){
+    printf("╔══════════════════════════════════════╗\n");
+    printf("║ [1] BUSCAR PELO CNPJ                 ║\n");
+    printf("║ [2] CONSULTAR PELO NOME              ║\n");
+    printf("║ [0] MENU ANTERIOR                    ║\n");
+    printf("╚══════════════════════════════════════╝\n\n");
+}  
+
+void editar_status_cliente_avulso(No_simples_clientes_pessoas *lista, int opcao){
+    if (lista == NULL){
+        printf("Não existem clientes cadastrados!\n");
+        return;
+    }
+
+    No_simples_clientes_pessoas *aux = lista;
+    char cpf[15];
+    char nome[50]; 
+    
+    if (opcao == 1){ 
+        printf("Informe o cpf do cliente que deseja editar: ");
+        scanf(" %[^\n]", cpf);
+
+        while (aux != NULL && strcmp(aux->cliente.cpf, cpf) != 0){
+            aux = aux->prox;
+        }
+
+        if (aux == NULL){
+            printf("Cliente não encontrado!\n");
+            return;
+        } 
+    }
+    if(opcao == 2){ 
+        printf("Informe o nome do cliente que deseja editar: ");
+        scanf(" %[^\n]", nome);
+
+        while (aux != NULL && strcmp(aux->cliente.nome, nome) != 0){
+            aux = aux->prox;
+        }
+
+        if (aux == NULL){
+            printf("Cliente não encontrado!\n");
+            return;
+        } 
+
+    }    
+
+    int op1, op2; 
+
+    char status_temp[8]; 
+    char status_ativo[8]; 
+
+    strcpy(status_temp, "INATIVO"); 
+    strcpy(status_ativo, "ATIVO"); 
+
+
+    if(strcmp(aux->cliente.status_cliente, status_temp) == 0){
+        do {
+            printf("Organização encontrada, de nome %s, com o status atual %s, deseja torna-lo ATIVO ? (1-Para SIM, 2-Para NÃO)\n", aux->cliente.nome, aux->cliente.status_cliente); 
+            scanf("%d", &op1); 
+            if (op1 == 1) {
+                strcpy(aux->cliente.status_cliente, status_ativo);  
+                printf("STATUS ALTERADO COM SUCESSO!\n"); 
+            } 
+        } while (op1 < 1 || op1 > 2); 
+    }else{
+        do{
+        printf("Cliente encontrado, de nome %s, com o status atual %s, deseja torna-lo INATIVO ? (1-Para SIM, 2-Para NÃO)\n", aux->cliente.nome, aux->cliente.status_cliente); 
+        scanf("%d", &op2); 
+            if(op2 == 1){
+                strcpy(aux->cliente.status_cliente, status_temp);  
+                printf("STATUS ALTERADO COM SUCESSO!\n"); 
+            } 
+        }while(op2 < 1 || op2 > 2);     
+    
+    } 
+
+}     
+
+
+void editar_status_cliente_organizacao(No_simples_clientes_organizacoes *lista, int opcao){
+    if (lista == NULL){
+        printf("Não existem clientes cadastrados!\n");
+        return;
+    }
+
+    No_simples_clientes_organizacoes *aux = lista;
+    char cnpj[15];
+    char nome[50]; 
+    
+    if (opcao == 1){ 
+        printf("Informe o CNPJ da Organização que deseja editar: ");
+        scanf(" %[^\n]", cnpj);
+
+        while (aux != NULL && strcmp(aux->cliente.cnpj, cnpj) != 0){
+            aux = aux->prox;
+        }
+
+        if (aux == NULL){
+            printf("Organização não encontrada!\n");
+            return;
+        } 
+    }
+    if (opcao == 2){ 
+        printf("Informe o nome Fantasia da Organização que deseja editar: ");
+        scanf(" %[^\n]", nome);
+
+        while (aux != NULL && strcmp(aux->cliente.nome, nome) != 0){
+            aux = aux->prox;
+        }
+
+        if (aux == NULL){
+            printf("Organização não encontrada!\n");
+            return;
+        } 
+    }    
+
+    int op1, op2; 
+
+    char status_temp[8];
+    char status_ativo[8];
+
+    strcpy(status_temp, "INATIVO"); 
+    strcpy(status_ativo, "ATIVO"); 
+
+    if (strcmp(aux->cliente.status_organizacao, status_temp) == 0) { 
+        do {
+            printf("Organização encontrada, de nome %s, com o status atual %s, deseja torna-lo ATIVO ? (1-Para SIM, 2-Para NÃO)\n", aux->cliente.nome, aux->cliente.status_organizacao); 
+            scanf("%d", &op1); 
+            if (op1 == 1) {
+                strcpy(aux->cliente.status_organizacao, status_ativo);  
+                printf("STATUS ALTERADO COM SUCESSO!\n"); 
+            } 
+        } while (op1 < 1 || op1 > 2); 
+    } else {
+        do {
+            printf("Organização encontrada, de nome %s, com o status atual %s, deseja torna-lo INATIVO ? (1-Para SIM, 2-Para NÃO)\n", aux->cliente.nome, aux->cliente.status_organizacao); 
+            scanf("%d", &op2); 
+            if (op2 == 1) {
+                strcpy(aux->cliente.status_organizacao, status_temp);  
+                printf("STATUS ALTERADO COM SUCESSO!\n"); 
+            } 
+        } while (op2 < 1 || op2 > 2); 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void consulta_cliente_cpf(No_simples_clientes_pessoas *lista){
     if (lista==NULL)
