@@ -80,6 +80,8 @@ void consulta_cliente_cpf(No_simples_clientes_pessoas *lista);
 void consulta_cliente_nome(No_simples_clientes_pessoas *lista);
 void consulta_cliente_status_inativo(No_simples_clientes_pessoas *lista);
 void consulta_cliente_status_ativo(No_simples_clientes_pessoas *lista);
+void menu_editar_cliente();
+void editar_cliente_avulso(No_simples_clientes_pessoas *lista);
 
 No_simples_clientes_organizacoes *cria_lista_organizacao();
 No_simples_clientes_organizacoes *add_no_fim_org(No_simples_clientes_organizacoes *lista);
