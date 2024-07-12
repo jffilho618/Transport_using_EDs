@@ -699,3 +699,90 @@ void editar_cliente_avulso(No_simples_clientes_pessoas *lista){
         
     } while (op != 0);
 }
+
+
+
+void menu_editar_organizacao(){
+    printf("╔══════════════════════════════════════╗\n");
+    printf("║         MENU EDITAR ORGANIZAÇÃO      ║\n");
+    printf("╠══════════════════════════════════════╣\n");
+    printf("║ [1] EDITAR NOME                      ║\n");
+    printf("║ [2] EDITAR CNPJ                      ║\n");
+    printf("║ [3] EDITAR TELEFONE                  ║\n");
+    printf("║ [4] EDITAR ENDEREÇO                  ║\n");
+    printf("║ [5] EDITAR EMAIL                     ║\n");
+    printf("║ [0] SAIR                             ║\n");
+    printf("╚══════════════════════════════════════╝\n\n");
+}
+
+
+void editar_cliente_organizacao(No_simples_clientes_organizacoes *lista){
+    if (lista == NULL){
+        printf("Não existem clientes cadastrados!\n");
+        return;
+    }
+
+    No_simples_clientes_organizacoes *aux = lista;
+    char cnpj[15];
+
+    printf("Informe o cpf do cliente que deseja editar: ");
+    scanf(" %[^\n]", cnpj);
+
+    while (aux != NULL && strcmp(aux->cliente.cnpj, cnpj) != 0){
+        aux = aux->prox;
+    }
+
+    if (aux == NULL){
+        printf("Cliente não encontrado!\n");
+        return;
+    }
+
+    int op;
+
+    do
+    {
+        menu_editar_organizacao();
+        scanf("%d", &op);
+
+        switch (op)
+        {
+        case 1:
+            printf("Informe o novo nome do cliente: ");
+            scanf(" %[^\n]", aux->cliente.nome);
+            break;
+
+        case 2:
+            printf("Informe o novo cpf do cliente: ");
+            scanf(" %[^\n]", aux->cliente.cnpj);
+            break;
+
+        case 3:
+            printf("Informe o novo telefone do cliente: ");
+            scanf(" %[^\n]", aux->cliente.telefone);
+            break;
+
+        case 4:
+            printf("Informe o novo endereço do cliente: ");
+            scanf(" %[^\n]", aux->cliente.endereco);
+            break;
+
+        case 5:
+            printf("Informe o novo email do cliente: ");
+            scanf(" %[^\n]", aux->cliente.email);
+            break;
+
+        case 0:
+            break;
+        
+        default:
+            printf("Opção inválida!\n");
+            break;
+        }
+    
+        if (op != 0){
+            printf("Deseja alterar mais alguma coisa (1 - SIM / 0 - NÃO): ");
+            scanf("%d", &op);
+        }
+        
+    } while (op != 0);
+}

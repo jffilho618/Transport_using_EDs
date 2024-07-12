@@ -90,8 +90,8 @@ void consulta_org_cnpj(No_simples_clientes_organizacoes *lista);
 void consulta_nome_org(No_simples_clientes_organizacoes *lista);
 void consulta_org_status_inativo(No_simples_clientes_organizacoes *lista);
 void consulta_org_status_ativo(No_simples_clientes_organizacoes *lista);
-
-
+void menu_editar_organizacao();
+void editar_cliente_organizacao(No_simples_clientes_organizacoes *lista);
 
 
 void menu_editar_cliente();
