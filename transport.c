@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
+#include <time.h>
 
 
 char* obter_hora_atual() {
@@ -1195,3 +1197,26 @@ void imprimir_fila(Fila *f){
 }
 
 
+void sorteia_ids(int vet[], int *n){
+    int num_aleatorio, cont = *n;
+    bool num_repetido;
+
+    srand(time(NULL));
+
+    do
+    {
+        num_repetido = false;
+        num_aleatorio = rand() % 99 + 1;
+        for(int k = 0; k < cont; k++){
+            if(vet[k] == num_aleatorio){
+                num_repetido = true;
+                break;
+            }
+        }
+        if(!num_repetido){
+            vet[*n] = num_aleatorio;
+            (*n)++;
+        }
+    } while (num_repetido);
+
+}
