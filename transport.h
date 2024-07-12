@@ -96,3 +96,4 @@ void consulta_org_status_ativo(No_simples_clientes_organizacoes *lista);
 
 
 
+
