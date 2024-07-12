@@ -94,7 +94,8 @@ void consulta_org_status_ativo(No_simples_clientes_organizacoes *lista);
 
 
 
-
+void menu_editar_cliente();
+void editar_cliente_avulso(No_simples_clientes_pessoas *lista);
 
 
 
