@@ -90,6 +90,18 @@ int main(){
                 case 1:
                     lista_organizacao = add_no_fim_org(lista_organizacao);
                     break;
+
+                case 3:
+                    if (lista_organizacao == NULL){
+                        printf("Não há clientes cadastrados!\n");
+                    }
+
+                    else{
+                        editar_cliente_organizacao(lista_organizacao);
+                    }
+
+                    break;
+
                 case 4:
                     if (lista_organizacao==NULL)
                     {
