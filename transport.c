@@ -252,8 +252,11 @@ void menu_entregas(){
     printf("╠══════════════════════════════════════╣\n");
     printf("║ [1] PEDIDOS ESPERANDO ENTREGA        ║\n");
     printf("║ [2] REALIZAR ENTREGA                 ║\n");
-    printf("║ [3] HISTORICO DE ENTREGAS POR PESSOA ║\n");
-    printf("║ [4] HISTORICO DE ENTREGAS POR ORG    ║\n");
+    printf("║ [3] HISTORICO DE ENVIADAS PESSOA     ║\n");
+    printf("║ [4] HISTORICO DE RECEBIDOS PESSOA    ║\n");
+    printf("║ [5] HISTORICO DE ENVIADAS ORG        ║\n");
+    printf("║ [6] HISTORICO DE RECEBIDOS ORG       ║\n");
+    printf("║ [7] PRODUTOS DEVOLVIDOS              ║\n");
     printf("║ [0] MENU ANTERIOR                    ║\n");
     printf("╚══════════════════════════════════════╝\n\n");
 }
@@ -1139,6 +1142,28 @@ Pilha_nao_entregues *criaPilha(){
     return NULL;
 }
 
+int pilhaVazia(Pilha_nao_entregues *pilha){
+    if(pilha == NULL){
+        return 1;
+    }
+
+    return 0;
+}
+
+Entrega *pop(Pilha_nao_entregues **pilha) {
+    if (pilhaVazia(*pilha)) {
+        printf("A pilha está vazia!\n");
+        return NULL;
+    }
+
+    Pilha_nao_entregues *aux = *pilha;
+    Entrega *entrega = aux->entrega;
+    *pilha = aux->prox;
+    free(aux);
+
+    return entrega;
+}
+
 void push(Pilha_nao_entregues **pilha, Entrega *entrega){
     Pilha_nao_entregues *novo = (Pilha_nao_entregues*)malloc(sizeof(Pilha_nao_entregues));
     if (novo == NULL){
@@ -1267,7 +1292,7 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
     return fila;
 }
 
-void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **historico_entregas, Pilha_nao_entregues **pilha_nao_entregues) {
+void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **historico_entregas, Pilha_nao_entregues **pilha_nao_entregues, No_simples_entregas **lista_devolucao) {
     if (fila_vazia(fila)) {
         printf("NÃO EXISTEM ENTREGAS PENDENTES!\n");
         return;
@@ -1281,18 +1306,21 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
     int valor;
     srand(time(NULL)); // Inicializa o gerador de números aleatórios apenas uma vez
 
-    while (!fila_vazia(fila) && *conta_entregas > 0) {
+    while (!fila_vazia(fila)) {
         No *atual = fila->inicio; // Sempre pega o início da fila
         valor = rand() % 5 + 1;
         printf("VALOR: %d\n", valor);
 
         // Processar a entrega atual
-        if (valor == 1 || valor == 3 || valor == 5 || valor == 4) {
+        if (valor == 1 || valor == 3 || valor == 5) {
             strcpy(atual->entrega->status, "ENTREGUE");
             Entrega *entrega = fila_retira(&fila);
+            entrega->remetente_pessoa->conta_entregas++;
+            entrega->horaEntrega = obter_hora_atual();
+            entrega->dataEntrega = obter_data_atual();
+            entrega->score += 5;
             add_inicio_entrega(historico_entregas, entrega);
         } else {
-            strcpy(atual->entrega->status, "NÃO ENTREGUE");
             Entrega *entrega = fila_retira(&fila);
             push(pilha_nao_entregues, entrega);
         }
@@ -1300,19 +1328,75 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
         // Atualizar atual para a próxima entrega e verificar destinatário
         while (fila->inicio != NULL && strcmp(fila->inicio->entrega->destinatario->cpf, atual->entrega->destinatario->cpf) == 0) {
             atual = fila->inicio;
-            if (valor == 1 || valor == 3 || valor == 5 || valor == 4) {
+            if (valor == 1 || valor == 3 || valor == 5) {
                 strcpy(atual->entrega->status, "ENTREGUE");
                 Entrega *entrega = fila_retira(&fila);
+                entrega->remetente_pessoa->conta_entregas++;
+                entrega->horaEntrega = obter_hora_atual();
+                entrega->dataEntrega = obter_data_atual();
+                entrega->score += 5;
                 add_inicio_entrega(historico_entregas, entrega);
             } else {
-                strcpy(atual->entrega->status, "NÃO ENTREGUE");
                 Entrega *entrega = fila_retira(&fila);
                 push(pilha_nao_entregues, entrega);
             }
         }
-
-        (*conta_entregas)--; // Decrementa após cada iteração do loop principal
     }
+
+    while (!pilhaVazia(*pilha_nao_entregues)) {
+        Pilha_nao_entregues *aux = *pilha_nao_entregues;
+        int valor = rand() % 5 + 1;
+        printf("VALOR: %d\n", valor);
+
+        // Processar a entrega do topo da pilha
+        if (valor == 1 || valor == 3 || valor == 5){
+            Entrega *entrega = pop(pilha_nao_entregues);
+            strcpy(entrega->status, "ENTREGUE");
+            entrega->remetente_pessoa->conta_entregas++;
+            entrega->horaEntrega = obter_hora_atual();
+            entrega->dataEntrega = obter_data_atual();
+            entrega->score += 3;
+            add_inicio_entrega(historico_entregas, entrega);
+        } else {
+            Entrega *entrega = pop(pilha_nao_entregues);
+            strcpy(entrega->status, "DEVOLVIDO");
+            entrega->horaEntrega = obter_hora_atual();
+            entrega->dataEntrega = obter_data_atual();
+            if (entrega->score > 0) {
+                entrega->score -= 1;
+            }
+            
+            add_inicio_entrega(lista_devolucao, entrega);
+        }
+
+        // Processar entregas subsequentes com o mesmo destinatário usando o mesmo valor
+        while (*pilha_nao_entregues != NULL && strcmp((*pilha_nao_entregues)->entrega->destinatario->cpf, aux->entrega->destinatario->cpf) == 0) {
+            aux = *pilha_nao_entregues;
+
+            if (valor == 1 || valor == 3 || valor == 5){
+                Entrega *entrega = pop(pilha_nao_entregues);
+                strcpy(entrega->status, "ENTREGUE");
+                entrega->remetente_pessoa->conta_entregas++;
+                entrega->horaEntrega = obter_hora_atual();
+                entrega->dataEntrega = obter_data_atual();
+                entrega->score += 3;
+                add_inicio_entrega(historico_entregas, entrega);
+            } else {
+                Entrega *entrega = pop(pilha_nao_entregues);
+                strcpy(entrega->status, "DEVOLVIDO");
+                entrega->horaEntrega = obter_hora_atual();
+                entrega->dataEntrega = obter_data_atual();
+                if (entrega->score > 0) {
+                    entrega->score -= 1;
+                }
+                add_inicio_entrega(lista_devolucao, entrega);
+            }
+        }
+    
+    }
+
+    
+    (*conta_entregas) = 0;
 }
 
 
@@ -1337,7 +1421,7 @@ void imprimir_fila(Fila *fila) {
     printf("╚══════╩══════════════════╩════════════════════════════════════╩════════════╩══════════╩════════════╝\n");
 }
 
-void historico_entregas_clientes(No_simples_entregas *lista){
+void historico_recebidos_clientes(No_simples_entregas *lista){
     if (lista == NULL){
         printf("Não existem entregas realizadas!\n");
         return;
@@ -1377,8 +1461,8 @@ void historico_entregas_clientes(No_simples_entregas *lista){
             printf("║ %-27s : %-56s               ║\n", "ENDEREÇO DO DESTINATÁRIO", aux->entrega->destinatario->endereco);
             printf("║ %-26s : %-56s               ║\n", "EMAIL DO DESTINATÁRIO", aux->entrega->destinatario->email);
             printf("║ %-26s : %-56s               ║\n", "SEXO DO DESTINATÁRIO", aux->entrega->destinatario->sexo);
-            printf("║ %-25s : %-56s               ║\n", "HORA DA ENTREGA", obter_hora_atual());
-            printf("║ %-25s : %-56s               ║\n", "DATA DA ENTREGA", obter_data_atual());
+            printf("║ %-25s : %-56s               ║\n", "HORA DA ENTREGA", aux->entrega->horaEntrega);
+            printf("║ %-25s : %-56s               ║\n", "DATA DA ENTREGA", aux->entrega->dataEntrega);
             printf("║ %-25s : %-56s               ║\n", "STATUS", aux->entrega->status);
 
             printf("╚════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
@@ -1387,4 +1471,99 @@ void historico_entregas_clientes(No_simples_entregas *lista){
     }
     
 
+}
+
+void historico_enviados_clientes(No_simples_entregas *lista){
+    if (lista == NULL){
+        printf("Não existem entregas realizadas!\n");
+        return;
+    }
+
+    No_simples_entregas *aux = lista;
+    char cpf[15];
+
+    printf("INFORME O CPF DO CLIENTE QUE DESEJA CONSULTAR O HISTÓRICO DE ENTREGAS: ");
+    scanf(" %[^\n]", cpf);
+
+    while (aux !=NULL)
+    {
+        if (strcmp(aux->entrega->remetente_pessoa->cpf, cpf) == 0)
+        {
+            printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+            printf("║                                       NOTA FISCAL                                                  ║\n");
+            printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+
+            
+
+            printf("║ %-25s : %-56d               ║\n", "ID DO PEDIDO", aux->entrega->id);
+            printf("║ %-25s : %-56s               ║\n", "NOME DO REMETENTE", aux->entrega->remetente_pessoa->nome);
+            printf("║ %-25s : %-56s               ║\n", "CPF DO REMETENTE", aux->entrega->remetente_pessoa->cpf);
+            printf("║ %-25s : %-56s               ║\n", "TELEFONE DO REMETENTE", aux->entrega->remetente_pessoa->telefone);
+            printf("║ %-26s : %-56s               ║\n", "ENDEREÇO DO REMETENTE", aux->entrega->remetente_pessoa->endereco);
+            printf("║ %-25s : %-56s               ║\n", "EMAIL DO REMETENTE", aux->entrega->remetente_pessoa->email);
+            printf("║ %-25s : %-56s               ║\n", "SEXO DO REMETENTE", aux->entrega->remetente_pessoa->sexo);
+            printf("║ %-25s : %-56s               ║\n", "HORA DA POSTAGEM", aux->entrega->horaPostagem);
+            printf("║ %-25s : %-56s               ║\n", "DATA DA POSTAGEM", aux->entrega->dataPostagem);
+
+            printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+
+            printf("║ %-26s : %-56s               ║\n", "NOME DO DESTINATÁRIO", aux->entrega->destinatario->nome);
+            printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", aux->entrega->destinatario->cpf);
+            printf("║ %-26s : %-56s               ║\n", "TELEFONE DO DESTINATÁRIO", aux->entrega->destinatario->telefone);
+            printf("║ %-27s : %-56s               ║\n", "ENDEREÇO DO DESTINATÁRIO", aux->entrega->destinatario->endereco);
+            printf("║ %-26s : %-56s               ║\n", "EMAIL DO DESTINATÁRIO", aux->entrega->destinatario->email);
+            printf("║ %-26s : %-56s               ║\n", "SEXO DO DESTINATÁRIO", aux->entrega->destinatario->sexo);
+            printf("║ %-25s : %-56s               ║\n", "HORA DA ENTREGA", aux->entrega->horaEntrega);
+            printf("║ %-25s : %-56s               ║\n", "DATA DA ENTREGA", aux->entrega->dataEntrega);
+            printf("║ %-25s : %-56s               ║\n", "STATUS", aux->entrega->status);
+
+            printf("╚════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
+        }
+        aux = aux->prox;
+    }
+    
+
+}
+
+void historico_devolucao(No_simples_entregas *lista){
+    if (lista == NULL){
+        printf("NÃO EXISTEM ENTREGAS DEVOLVIDAS !\n");
+        return;
+    }
+
+    No_simples_entregas *aux = lista;
+
+    while (aux != NULL)
+    {
+        printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+        printf("║                                       NOTA FISCAL                                                  ║\n");
+        printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+
+        
+
+        printf("║ %-25s : %-56d               ║\n", "ID DO PEDIDO", aux->entrega->id);
+        printf("║ %-25s : %-56s               ║\n", "NOME DO REMETENTE", aux->entrega->remetente_pessoa->nome);
+        printf("║ %-25s : %-56s               ║\n", "CPF DO REMETENTE", aux->entrega->remetente_pessoa->cpf);
+        printf("║ %-25s : %-56s               ║\n", "TELEFONE DO REMETENTE", aux->entrega->remetente_pessoa->telefone);
+        printf("║ %-26s : %-56s               ║\n", "ENDEREÇO DO REMETENTE", aux->entrega->remetente_pessoa->endereco);
+        printf("║ %-25s : %-56s               ║\n", "EMAIL DO REMETENTE", aux->entrega->remetente_pessoa->email);
+        printf("║ %-25s : %-56s               ║\n", "SEXO DO REMETENTE", aux->entrega->remetente_pessoa->sexo);
+        printf("║ %-25s : %-56s               ║\n", "HORA DA POSTAGEM", aux->entrega->horaPostagem);
+        printf("║ %-25s : %-56s               ║\n", "DATA DA POSTAGEM", aux->entrega->dataPostagem);
+
+        printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+
+        printf("║ %-26s : %-56s               ║\n", "NOME DO DESTINATÁRIO", aux->entrega->destinatario->nome);
+        printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", aux->entrega->destinatario->cpf);
+        printf("║ %-26s : %-56s               ║\n", "TELEFONE DO DESTINATÁRIO", aux->entrega->destinatario->telefone);
+        printf("║ %-27s : %-56s               ║\n", "ENDEREÇO DO DESTINATÁRIO", aux->entrega->destinatario->endereco);
+        printf("║ %-26s : %-56s               ║\n", "EMAIL DO DESTINATÁRIO", aux->entrega->destinatario->email);
+        printf("║ %-26s : %-56s               ║\n", "SEXO DO DESTINATÁRIO", aux->entrega->destinatario->sexo);
+        printf("║ %-27s : %-56s               ║\n", "HORA DA DEVOLUÇÃO", aux->entrega->horaEntrega);
+        printf("║ %-27s : %-56s               ║\n", "DATA DA DEVOLUÇÃO", aux->entrega->dataEntrega);
+        printf("║ %-25s : %-56s               ║\n", "STATUS", aux->entrega->status);
+
+        printf("╚════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
+        aux = aux->prox;
+    }
 }

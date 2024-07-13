@@ -14,6 +14,7 @@ int main(){
     Fila *fila = fila_cria();
     No_simples_entregas *historico = cria_lista_entregas();
     Pilha_nao_entregues *pilha_nao_entregues = criaPilha();
+    No_simples_entregas *lista_devolucao = cria_lista_entregas();
 
 
     do
@@ -225,12 +226,20 @@ int main(){
                     break;
 
                 case 2:
-                    realizar_entrega(fila, &conta_entregas,&historico, &pilha_nao_entregues);
-                    break;
-                case 3:
-                    historico_entregas_clientes(historico);
+                    realizar_entrega(fila, &conta_entregas,&historico, &pilha_nao_entregues, &lista_devolucao);
                     break;
 
+                case 3:
+                    historico_enviados_clientes(historico);
+                    break;
+                
+                case 4:
+                    historico_recebidos_clientes(historico);
+                    break;
+
+                case 7:
+                    historico_devolucao(lista_devolucao);
+                    break;
                 case 0:
                     break;
 
