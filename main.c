@@ -4,10 +4,10 @@
 
 
 int main(){
-    int op,op2,op3,op4,op5,op6, op7, op8;
+    int op, op2, op3, op4, op5, op6, op7, op8, op9;
     int conta_entregas = 0;
-    int id_entrega = 0;
-    int id_entrega_[100];
+    int pos_id = 0;
+    int vetor_ids[100];
 
     No_simples_clientes_organizacoes *lista_organizacao = cria_lista_organizacao();
     No_simples_clientes_pessoas *lista_pessoa = cria_lista_pessoa();
@@ -109,7 +109,7 @@ int main(){
                     break;
                 
                 case 7:
-                    fila = realizar_postagem_por_pessoa(fila, lista_pessoa, &conta_entregas);
+                    fila = realizar_postagem_por_pessoa(fila, lista_pessoa, &conta_entregas, vetor_ids, &pos_id);
                     break;      
 
                 default:
@@ -211,15 +211,25 @@ int main(){
             break;
 
         case 3:
-            menu_entregas();
-            scanf("%d",&op8);
-            switch (op8)
+            do
             {
-            case 1:
-                imprimir_fila(fila);
-                break;
-            }
-            break;
+                menu_entregas();
+                scanf("%d",&op8);
+                switch (op8)
+                {
+                case 1:
+                    imprimir_fila(fila);
+                    break;
+
+                case 0:
+                    break;
+
+                default:
+                    printf("Entrada inválida!\n");
+                    break;
+                }
+                // break;
+            } while (op9 != 0);
 
         default:
             break;

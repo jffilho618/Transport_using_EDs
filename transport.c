@@ -1064,7 +1064,33 @@ void fila_insere_ordenado(Fila* f, Entrega *entrega) {
     }
 }
 
-Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *lista, int *conta_entregas){
+int sorteia_ids(int vet[], int *n){
+    int num_aleatorio, cont = *n;
+    bool num_repetido;
+
+    srand(time(NULL));
+
+    do
+    {
+        num_repetido = false;
+        num_aleatorio = rand() % 99 + 1;
+        for(int k = 0; k < cont; k++){
+            if(vet[k] == num_aleatorio){
+                num_repetido = true;
+                break;
+            }
+        }
+        if(!num_repetido){
+            vet[*n] = num_aleatorio;
+            (*n)++;
+        }
+    } while (num_repetido);
+
+    return num_aleatorio;
+
+}
+
+Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *lista, int *conta_entregas, int vet[], int *n){
     if (lista == NULL){
         printf("Não existem clientes cadastrados!\n");
         return fila;
@@ -1103,6 +1129,8 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
         return fila;
     }
 
+    entrega->id =  sorteia_ids(vet, n);
+
     printf("INFORME O NOME DO DESTINATÁRIO: ");
     scanf(" %[^\n]", entrega->destinatario->nome);
 
@@ -1134,6 +1162,7 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
     printf("║                                       NOTA FISCAL                                                  ║\n");
     printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
 
+    printf("║ %-25s : %-56d               ║\n", "ID DO PEDIDO", entrega->id);
     printf("║ %-25s : %-56s               ║\n", "NOME DO REMETENTE", aux_remetente->cliente.nome);
     printf("║ %-25s : %-56s               ║\n", "CPF DO REMETENTE", aux_remetente->cliente.cpf);
     printf("║ %-25s : %-56s               ║\n", "TELEFONE DO REMETENTE", aux_remetente->cliente.telefone);
@@ -1194,29 +1223,4 @@ void imprimir_fila(Fila *f){
                 atual->entrega->status);
         atual = atual->prox;
     }
-}
-
-
-void sorteia_ids(int vet[], int *n){
-    int num_aleatorio, cont = *n;
-    bool num_repetido;
-
-    srand(time(NULL));
-
-    do
-    {
-        num_repetido = false;
-        num_aleatorio = rand() % 99 + 1;
-        for(int k = 0; k < cont; k++){
-            if(vet[k] == num_aleatorio){
-                num_repetido = true;
-                break;
-            }
-        }
-        if(!num_repetido){
-            vet[*n] = num_aleatorio;
-            (*n)++;
-        }
-    } while (num_repetido);
-
 }
