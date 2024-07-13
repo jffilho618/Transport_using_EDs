@@ -1182,7 +1182,7 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
         return fila;
     }
 
-    if (*conta_entregas == 3){
+    if (*conta_entregas == 6){
         printf("Limite de postagens atingido!\n");
         return fila;
     }
@@ -1235,12 +1235,7 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
     printf("INFORME O SEXO DO DESTINATÁRIO: ");
     scanf(" %[^\n]", entrega->destinatario->sexo);
 
-    strcpy(entrega->remetente_pessoa->nome, aux_remetente->cliente.nome);
-    strcpy(entrega->remetente_pessoa->cpf, aux_remetente->cliente.cpf);
-    strcpy(entrega->remetente_pessoa->telefone, aux_remetente->cliente.telefone);
-    strcpy(entrega->remetente_pessoa->endereco, aux_remetente->cliente.endereco);
-    strcpy(entrega->remetente_pessoa->email, aux_remetente->cliente.email);
-    strcpy(entrega->remetente_pessoa->sexo, aux_remetente->cliente.sexo);
+    entrega->remetente_pessoa = &(aux_remetente->cliente);
     entrega->horaPostagem = obter_hora_atual();
     entrega->dataPostagem = obter_data_atual();
 
@@ -1298,7 +1293,7 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
         return;
     }
 
-    if (*conta_entregas < 3) {
+    if (*conta_entregas < 6) {
         printf("LIMITE DE POSTAGENS NÃO ATINGIDO!\n");
         return;
     }
