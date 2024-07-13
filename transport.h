@@ -7,7 +7,6 @@ typedef struct cliente_organizacao
     char email[50];
     char status_organizacao[12];
     int conta_entregas;
-    //Entrega *entregas;
 }Cliente_organizacao;
 
 typedef struct cliente_pessoa
@@ -20,7 +19,6 @@ typedef struct cliente_pessoa
     char sexo[10];
     char status_cliente[12];
     int conta_entregas;
-    //Entrega *entregas;
 
 }Cliente_pessoa;
 typedef struct entrega
@@ -28,8 +26,8 @@ typedef struct entrega
     int  id;
     char *dataPostagem;
     char *horaPostagem;
-    char dataEntrega[15];
-    char horaEntrega[15];
+    char *dataEntrega;
+    char *horaEntrega;
     char status[15];
     int score;
     Cliente_pessoa *remetente_pessoa;
@@ -76,7 +74,7 @@ typedef struct pilha_nao_entregues
 
 Pilha_nao_entregues *criaPilha();
 void push(Pilha_nao_entregues **pilha, Entrega *entrega);
-int pop(Pilha_nao_entregues **pilha);
+Entrega *pop(Pilha_nao_entregues **pilha);
 int pilhaVazia(Pilha_nao_entregues *pilha);
 void liberaPilha(Pilha_nao_entregues *pilha);
 void imprimePilha(Pilha_nao_entregues *pilha);
@@ -134,5 +132,7 @@ void menu_editar_status_cliente_Organizacao();
 void editar_status_cliente_organizacao(No_simples_clientes_organizacoes *lista, int opcao);
 
 int sorteia_ids(int vet[], int *n);
-void realizar_entrega(Fila *fila, int *conta_entregas,No_simples_entregas **historico_entregas, Pilha_nao_entregues **pilha_nao_entregues);
-void historico_entregas_clientes(No_simples_entregas *lista);
+void realizar_entrega(Fila *fila, int *conta_entregas,No_simples_entregas **historico_entregas, Pilha_nao_entregues **pilha_nao_entregues, No_simples_entregas **lista_devolucao);
+void historico_recebidos_clientes(No_simples_entregas *lista);
+void historico_enviados_clientes(No_simples_entregas *lista);
+void historico_devolucao(No_simples_entregas *lista);
