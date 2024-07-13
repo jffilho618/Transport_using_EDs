@@ -91,7 +91,7 @@ void consulta_cliente_status_inativo(No_simples_clientes_pessoas *lista);
 void consulta_cliente_status_ativo(No_simples_clientes_pessoas *lista);
 void menu_editar_cliente();
 void editar_cliente_avulso(No_simples_clientes_pessoas *lista);
-Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *lista, int *conta_entregas);
+Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *lista, int *conta_entregas, int vet[], int *n);
 
 
 No_simples_clientes_organizacoes *cria_lista_organizacao();
@@ -114,4 +114,4 @@ void editar_status_cliente_avulso(No_simples_clientes_pessoas *lista, int opcao)
 void menu_editar_status_cliente_Organizacao(); 
 void editar_status_cliente_organizacao(No_simples_clientes_organizacoes *lista, int opcao);
 
-void sorteia_ids(int vet[], int n);
+int sorteia_ids(int vet[], int *n);
