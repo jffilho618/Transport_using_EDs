@@ -1298,12 +1298,11 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
         return;
     }
 
-    int valor;
     srand(time(NULL)); // Inicializa o gerador de números aleatórios apenas uma vez
 
     while (!fila_vazia(fila)) {
         No *atual = fila->inicio; // Sempre pega o início da fila
-        valor = rand() % 5 + 1;
+        int valor = rand() % 5 + 1;
         printf("VALOR: %d\n", valor);
 
         // Processar a entrega atual
@@ -1323,6 +1322,9 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
         // Atualizar atual para a próxima entrega e verificar destinatário
         while (fila->inicio != NULL && strcmp(fila->inicio->entrega->destinatario->cpf, atual->entrega->destinatario->cpf) == 0) {
             atual = fila->inicio;
+            //valor = rand() % 5 + 1;
+            //printf("VALOR: %d\n", valor);
+
             if (valor == 1 || valor == 3 || valor == 5) {
                 strcpy(atual->entrega->status, "ENTREGUE");
                 Entrega *entrega = fila_retira(&fila);
@@ -1344,7 +1346,7 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
         printf("VALOR: %d\n", valor);
 
         // Processar a entrega do topo da pilha
-        if (valor == 1 || valor == 3 || valor == 5){
+        if (valor == 1 || valor == 3 || valor == 5) {
             Entrega *entrega = pop(pilha_nao_entregues);
             strcpy(entrega->status, "ENTREGUE");
             entrega->remetente_pessoa->conta_entregas++;
@@ -1360,7 +1362,6 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
             if (entrega->score > 0) {
                 entrega->score -= 1;
             }
-            
             add_inicio_entrega(lista_devolucao, entrega);
         }
 
@@ -1368,7 +1369,7 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
         while (*pilha_nao_entregues != NULL && strcmp((*pilha_nao_entregues)->entrega->destinatario->cpf, aux->entrega->destinatario->cpf) == 0) {
             aux = *pilha_nao_entregues;
 
-            if (valor == 1 || valor == 3 || valor == 5){
+            if (valor == 1 || valor == 3 || valor == 5) {
                 Entrega *entrega = pop(pilha_nao_entregues);
                 strcpy(entrega->status, "ENTREGUE");
                 entrega->remetente_pessoa->conta_entregas++;
@@ -1387,12 +1388,11 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
                 add_inicio_entrega(lista_devolucao, entrega);
             }
         }
-    
     }
 
-    
-    (*conta_entregas) = 0;
+    *conta_entregas = 0;
 }
+
 
 
 void imprimir_fila(Fila *fila) {
