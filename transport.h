@@ -51,11 +51,16 @@ typedef struct no_simples_clientes_organizacoes
     struct no_simples_clientes_organizacoes *prox;
 }No_simples_clientes_organizacoes;
 
+typedef struct no_simples_entregas
+{
+    Entrega *entrega;
+    struct no_simples_entregas *prox;
+}No_simples_entregas;
+
 typedef struct no{
     Entrega *entrega;
     struct no *prox;
 }No;
-
 
 typedef struct fila{
     int info;
@@ -63,6 +68,18 @@ typedef struct fila{
     struct no *fim;
 }Fila;
 
+typedef struct pilha_nao_entregues
+{
+    Entrega *entrega;
+    struct pilha_nao_entregues *prox;
+}Pilha_nao_entregues;
+
+Pilha_nao_entregues *criaPilha();
+void push(Pilha_nao_entregues **pilha, Entrega *entrega);
+int pop(Pilha_nao_entregues **pilha);
+int pilhaVazia(Pilha_nao_entregues *pilha);
+void liberaPilha(Pilha_nao_entregues *pilha);
+void imprimePilha(Pilha_nao_entregues *pilha);
 
 void menu_principal();
 void menu_organizacao();
@@ -73,11 +90,13 @@ void menu_consulta_organizacao();
 void menu_consulta_organizacao_status();
 void menu_entregas();
 
+No_simples_entregas *cria_lista_entregas();
+void add_inicio_entrega(No_simples_entregas **lista, Entrega *entrega);
 
 Fila* fila_cria(void);
 void fila_insere_ordenado(Fila* f, Entrega *entrega);
 void fila_insere(Fila* f, float v);
-float fila_retira(Fila** f);
+Entrega *fila_retira(Fila** f);
 int fila_vazia(Fila* f);
 void fila_libera(Fila* f);
 void imprimir_fila(Fila *f);
@@ -115,3 +134,5 @@ void menu_editar_status_cliente_Organizacao();
 void editar_status_cliente_organizacao(No_simples_clientes_organizacoes *lista, int opcao);
 
 int sorteia_ids(int vet[], int *n);
+void realizar_entrega(Fila *fila, int *conta_entregas,No_simples_entregas **historico_entregas, Pilha_nao_entregues **pilha_nao_entregues);
+void historico_entregas_clientes(No_simples_entregas *lista);

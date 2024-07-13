@@ -1064,6 +1064,51 @@ void fila_insere_ordenado(Fila* f, Entrega *entrega) {
     }
 }
 
+
+Entrega *fila_retira(Fila** f) {
+    if (fila_vazia(*f)) {
+        return NULL;
+    }
+
+    No *aux = (*f)->inicio;
+    Entrega *entrega = aux->entrega;
+
+    (*f)->inicio = aux->prox;
+
+    if ((*f)->inicio == NULL) {
+        (*f)->fim = NULL;
+    }
+
+    free(aux);
+
+    return entrega;
+}
+
+
+No_simples_entregas *cria_lista_entregas(){
+    return NULL;
+}
+
+void add_inicio_entrega(No_simples_entregas **lista, Entrega *entrega){
+    No_simples_entregas *novo = (No_simples_entregas*)malloc(sizeof(No_simples_entregas));
+    if (novo == NULL){
+        printf("Memória insuficiente!\n");
+        return;
+    }
+
+    if (*lista == NULL){
+        novo->entrega = entrega;
+        novo->prox = NULL;
+        *lista = novo;
+    } else {
+        novo->entrega = entrega;
+        novo->prox = *lista;
+        *lista = novo;
+    }
+    
+}
+
+
 int sorteia_ids(int vet[], int *n){
     int num_aleatorio, cont = *n;
     bool num_repetido;
@@ -1090,13 +1135,29 @@ int sorteia_ids(int vet[], int *n){
 
 }
 
+Pilha_nao_entregues *criaPilha(){
+    return NULL;
+}
+
+void push(Pilha_nao_entregues **pilha, Entrega *entrega){
+    Pilha_nao_entregues *novo = (Pilha_nao_entregues*)malloc(sizeof(Pilha_nao_entregues));
+    if (novo == NULL){
+        printf("Memória insuficiente!\n");
+        return;
+    }
+
+    novo->entrega = entrega;
+    novo->prox = *pilha;
+    *pilha = novo;
+}
+
 Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *lista, int *conta_entregas, int vet[], int *n){
     if (lista == NULL){
         printf("Não existem clientes cadastrados!\n");
         return fila;
     }
 
-    if (*conta_entregas == 10){
+    if (*conta_entregas == 3){
         printf("Limite de postagens atingido!\n");
         return fila;
     }
@@ -1206,16 +1267,65 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
     return fila;
 }
 
-void imprimir_fila(Fila *f){
-    if (fila_vazia(f ))
-    {
-        printf("Fila vazia!\n");
+void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **historico_entregas, Pilha_nao_entregues **pilha_nao_entregues) {
+    if (fila_vazia(fila)) {
+        printf("NÃO EXISTEM ENTREGAS PENDENTES!\n");
         return;
     }
-    
-    No *atual = f->inicio;
+
+    if (*conta_entregas < 3) {
+        printf("LIMITE DE POSTAGENS NÃO ATINGIDO!\n");
+        return;
+    }
+
+    int valor;
+    srand(time(NULL)); // Inicializa o gerador de números aleatórios apenas uma vez
+
+    while (!fila_vazia(fila) && *conta_entregas > 0) {
+        No *atual = fila->inicio; // Sempre pega o início da fila
+        valor = rand() % 5 + 1;
+        printf("VALOR: %d\n", valor);
+
+        // Processar a entrega atual
+        if (valor == 1 || valor == 3 || valor == 5 || valor == 4) {
+            strcpy(atual->entrega->status, "ENTREGUE");
+            Entrega *entrega = fila_retira(&fila);
+            add_inicio_entrega(historico_entregas, entrega);
+        } else {
+            strcpy(atual->entrega->status, "NÃO ENTREGUE");
+            Entrega *entrega = fila_retira(&fila);
+            push(pilha_nao_entregues, entrega);
+        }
+
+        // Atualizar atual para a próxima entrega e verificar destinatário
+        while (fila->inicio != NULL && strcmp(fila->inicio->entrega->destinatario->cpf, atual->entrega->destinatario->cpf) == 0) {
+            atual = fila->inicio;
+            if (valor == 1 || valor == 3 || valor == 5 || valor == 4) {
+                strcpy(atual->entrega->status, "ENTREGUE");
+                Entrega *entrega = fila_retira(&fila);
+                add_inicio_entrega(historico_entregas, entrega);
+            } else {
+                strcpy(atual->entrega->status, "NÃO ENTREGUE");
+                Entrega *entrega = fila_retira(&fila);
+                push(pilha_nao_entregues, entrega);
+            }
+        }
+
+        (*conta_entregas)--; // Decrementa após cada iteração do loop principal
+    }
+}
+
+
+void imprimir_fila(Fila *fila) {
+    No *atual = fila->inicio;
+
+    printf("╔══════╦══════════════════╦════════════════════════════════════╦════════════╦══════════╦════════════╗\n");
+    printf("║  ID  ║ CPF DESTINATÁRIO ║              ENDEREÇO              ║    DATA    ║   HORA   ║   STATUS   ║\n");
+    printf("╠══════╬══════════════════╬════════════════════════════════════╬════════════╬══════════╬════════════╣\n");
+
     while (atual != NULL) {
-        printf("CPF DESTINATÁRIO: %s, ENDEREÇO: %s, DATA: %s, HORA: %s, STATUS: %s\n", 
+        printf("║ %-4d ║ %-16s ║ %-34s ║ %-10s ║ %-8s ║ %-10s ║\n", 
+                atual->entrega->id,
                 atual->entrega->destinatario->cpf, 
                 atual->entrega->destinatario->endereco, 
                 atual->entrega->dataPostagem, 
@@ -1223,4 +1333,58 @@ void imprimir_fila(Fila *f){
                 atual->entrega->status);
         atual = atual->prox;
     }
+
+    printf("╚══════╩══════════════════╩════════════════════════════════════╩════════════╩══════════╩════════════╝\n");
+}
+
+void historico_entregas_clientes(No_simples_entregas *lista){
+    if (lista == NULL){
+        printf("Não existem entregas realizadas!\n");
+        return;
+    }
+
+    No_simples_entregas *aux = lista;
+    char cpf[15];
+
+    printf("INFORME O CPF DO CLIENTE QUE DESEJA CONSULTAR O HISTÓRICO DE ENTREGAS: ");
+    scanf(" %[^\n]", cpf);
+
+    while (aux !=NULL)
+    {
+        if (strcmp(aux->entrega->destinatario->cpf, cpf) == 0)
+        {
+            printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+            printf("║                                       NOTA FISCAL                                                  ║\n");
+            printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+
+            
+
+            printf("║ %-25s : %-56d               ║\n", "ID DO PEDIDO", aux->entrega->id);
+            printf("║ %-25s : %-56s               ║\n", "NOME DO REMETENTE", aux->entrega->remetente_pessoa->nome);
+            printf("║ %-25s : %-56s               ║\n", "CPF DO REMETENTE", aux->entrega->remetente_pessoa->cpf);
+            printf("║ %-25s : %-56s               ║\n", "TELEFONE DO REMETENTE", aux->entrega->remetente_pessoa->telefone);
+            printf("║ %-26s : %-56s               ║\n", "ENDEREÇO DO REMETENTE", aux->entrega->remetente_pessoa->endereco);
+            printf("║ %-25s : %-56s               ║\n", "EMAIL DO REMETENTE", aux->entrega->remetente_pessoa->email);
+            printf("║ %-25s : %-56s               ║\n", "SEXO DO REMETENTE", aux->entrega->remetente_pessoa->sexo);
+            printf("║ %-25s : %-56s               ║\n", "HORA DA POSTAGEM", aux->entrega->horaPostagem);
+            printf("║ %-25s : %-56s               ║\n", "DATA DA POSTAGEM", aux->entrega->dataPostagem);
+
+            printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+
+            printf("║ %-26s : %-56s               ║\n", "NOME DO DESTINATÁRIO", aux->entrega->destinatario->nome);
+            printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", aux->entrega->destinatario->cpf);
+            printf("║ %-26s : %-56s               ║\n", "TELEFONE DO DESTINATÁRIO", aux->entrega->destinatario->telefone);
+            printf("║ %-27s : %-56s               ║\n", "ENDEREÇO DO DESTINATÁRIO", aux->entrega->destinatario->endereco);
+            printf("║ %-26s : %-56s               ║\n", "EMAIL DO DESTINATÁRIO", aux->entrega->destinatario->email);
+            printf("║ %-26s : %-56s               ║\n", "SEXO DO DESTINATÁRIO", aux->entrega->destinatario->sexo);
+            printf("║ %-25s : %-56s               ║\n", "HORA DA ENTREGA", obter_hora_atual());
+            printf("║ %-25s : %-56s               ║\n", "DATA DA ENTREGA", obter_data_atual());
+            printf("║ %-25s : %-56s               ║\n", "STATUS", aux->entrega->status);
+
+            printf("╚════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
+        }
+        aux = aux->prox;
+    }
+    
+
 }

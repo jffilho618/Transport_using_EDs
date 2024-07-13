@@ -12,6 +12,9 @@ int main(){
     No_simples_clientes_organizacoes *lista_organizacao = cria_lista_organizacao();
     No_simples_clientes_pessoas *lista_pessoa = cria_lista_pessoa();
     Fila *fila = fila_cria();
+    No_simples_entregas *historico = cria_lista_entregas();
+    Pilha_nao_entregues *pilha_nao_entregues = criaPilha();
+
 
     do
     {
@@ -221,6 +224,13 @@ int main(){
                     imprimir_fila(fila);
                     break;
 
+                case 2:
+                    realizar_entrega(fila, &conta_entregas,&historico, &pilha_nao_entregues);
+                    break;
+                case 3:
+                    historico_entregas_clientes(historico);
+                    break;
+
                 case 0:
                     break;
 
@@ -228,8 +238,9 @@ int main(){
                     printf("Entrada inválida!\n");
                     break;
                 }
-                // break;
-            } while (op9 != 0);
+                
+            } while (op8 != 0);
+            break;
 
         default:
             break;
