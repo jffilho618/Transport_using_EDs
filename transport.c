@@ -806,6 +806,8 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
 }
 
 void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **historico_entregas, Pilha_nao_entregues **pilha_nao_entregues, No_simples_entregas **lista_devolucao) {
+    printf("Início da função realizar_entrega\n");
+
     if (fila_vazia(fila)) {
         printf("NÃO EXISTEM ENTREGAS PENDENTES!\n");
         return;
@@ -820,75 +822,54 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
 
     while (!fila_vazia(fila)) {
         No *atual = fila->inicio; // Sempre pega o início da fila
+        char cpf_atual[50];
+        strcpy(cpf_atual, atual->entrega->destinatario->id);
         int valor = rand() % 5 + 1;
         printf("VALOR: %d\n", valor);
 
-        // Processar a entrega atual
-        if (valor == 1 || valor == 3 || valor == 5) {
-            strcpy(atual->entrega->status, "ENTREGUE");
-            Entrega *entrega = fila_retira(&fila);
-            entrega->remetente_pessoa->conta_entregas++;
-            entrega->horaEntrega = obter_hora_atual();
-            entrega->dataEntrega = obter_data_atual();
-            entrega->score += 5;
-            add_inicio_entrega(historico_entregas, entrega);
-        } else {
-            Entrega *entrega = fila_retira(&fila);
-            push(pilha_nao_entregues, entrega);
-        }
-
-        // Atualizar atual para a próxima entrega e verificar destinatário
-        while (fila->inicio != NULL && strcmp(fila->inicio->entrega->destinatario->id, atual->entrega->destinatario->id) == 0) {
+        while (!fila_vazia(fila) && strcmp(fila->inicio->entrega->destinatario->id, cpf_atual) == 0) {
             atual = fila->inicio;
-            //valor = rand() % 5 + 1;
-            //printf("VALOR: %d\n", valor);
 
             if (valor == 1 || valor == 3 || valor == 5) {
+                printf("Entregando item...\n");
                 strcpy(atual->entrega->status, "ENTREGUE");
                 Entrega *entrega = fila_retira(&fila);
+                if (entrega == NULL) {
+                    printf("Erro: Entrega é NULL após fila_retira\n");
+                    break;
+                }
                 entrega->remetente_pessoa->conta_entregas++;
                 entrega->horaEntrega = obter_hora_atual();
                 entrega->dataEntrega = obter_data_atual();
                 entrega->score += 5;
                 add_inicio_entrega(historico_entregas, entrega);
             } else {
+                printf("Falha na entrega, movendo para pilha_nao_entregues\n");
                 Entrega *entrega = fila_retira(&fila);
+                if (entrega == NULL) {
+                    printf("Erro: Entrega é NULL após fila_retira\n");
+                    break;
+                }
                 push(pilha_nao_entregues, entrega);
             }
         }
     }
 
     while (!pilhaVazia(*pilha_nao_entregues)) {
-        Pilha_nao_entregues *aux = *pilha_nao_entregues;
+        Pilha_nao_entregues *atual = *pilha_nao_entregues;
+        char cpf_atual[50];
+        strcpy(cpf_atual, atual->entrega->destinatario->id);
         int valor = rand() % 5 + 1;
         printf("VALOR: %d\n", valor);
 
-        // Processar a entrega do topo da pilha
-        if (valor == 1 || valor == 3 || valor == 5) {
-            Entrega *entrega = pop(pilha_nao_entregues);
-            strcpy(entrega->status, "ENTREGUE");
-            entrega->remetente_pessoa->conta_entregas++;
-            entrega->horaEntrega = obter_hora_atual();
-            entrega->dataEntrega = obter_data_atual();
-            entrega->score += 3;
-            add_inicio_entrega(historico_entregas, entrega);
-        } else {
-            Entrega *entrega = pop(pilha_nao_entregues);
-            strcpy(entrega->status, "DEVOLVIDO");
-            entrega->horaEntrega = obter_hora_atual();
-            entrega->dataEntrega = obter_data_atual();
-            if (entrega->score > 0) {
-                entrega->score -= 1;
-            }
-            add_inicio_entrega(lista_devolucao, entrega);
-        }
-
-        // Processar entregas subsequentes com o mesmo destinatário usando o mesmo valor
-        while (*pilha_nao_entregues != NULL && strcmp((*pilha_nao_entregues)->entrega->destinatario->id, aux->entrega->destinatario->id) == 0) {
-            aux = *pilha_nao_entregues;
-
+        while (!pilhaVazia(*pilha_nao_entregues) && strcmp((*pilha_nao_entregues)->entrega->destinatario->id, cpf_atual) == 0) {
             if (valor == 1 || valor == 3 || valor == 5) {
+                printf("Entregando item da pilha...\n");
                 Entrega *entrega = pop(pilha_nao_entregues);
+                if (entrega == NULL) {
+                    printf("Erro: Entrega é NULL após pop\n");
+                    break;
+                }
                 strcpy(entrega->status, "ENTREGUE");
                 entrega->remetente_pessoa->conta_entregas++;
                 entrega->horaEntrega = obter_hora_atual();
@@ -896,7 +877,12 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
                 entrega->score += 3;
                 add_inicio_entrega(historico_entregas, entrega);
             } else {
+                printf("Falha na entrega da pilha, movendo para lista_devolucao\n");
                 Entrega *entrega = pop(pilha_nao_entregues);
+                if (entrega == NULL) {
+                    printf("Erro: Entrega é NULL após pop\n");
+                    break;
+                }
                 strcpy(entrega->status, "DEVOLVIDO");
                 entrega->horaEntrega = obter_hora_atual();
                 entrega->dataEntrega = obter_data_atual();
@@ -909,8 +895,8 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
     }
 
     *conta_entregas = 0;
-} 
-
+    printf("Fim da função realizar_entrega\n");
+}
 
 
 void imprimir_fila(Fila *fila) {
