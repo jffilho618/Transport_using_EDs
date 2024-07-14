@@ -9,7 +9,6 @@ int main(){
     int pos_id = 0;
     int vetor_ids[100];
 
-    No_simples_clientes_organizacoes *lista_organizacao = cria_lista_organizacao();
     No_simples_clientes_pessoas *lista_pessoa = cria_lista_pessoa();
     Fila *fila = fila_cria();
     No_simples_entregas *historico = cria_lista_entregas();
@@ -121,100 +120,8 @@ int main(){
                 }
             } while (op2!=0);
             break;
-        
+
         case 2:
-            do
-            {
-                menu_organizacao();
-                scanf("%d",&op2);
-                switch (op2)
-                {
-                case 1:
-                    lista_organizacao = add_no_fim_org(lista_organizacao);
-                    break;
-                case 2: 
-                    if (lista_organizacao == NULL) {
-                        printf("NÃO HÁ ORGANIZAÇÕES CADASTRADAS !!\n\n");
-                    } else { 
-                        do{
-                        menu_editar_status_cliente_Organizacao(); 
-                        
-                            scanf("%d", &op7);                         
-                            switch (op7) { 
-                                case 1: 
-                                    // Pesquisar pelo CNPJ 
-                                    editar_status_cliente_organizacao(lista_organizacao, 1);
-                                    break; 
-                                case 2: 
-                                    // Pesquisar pelo Nome Fantasia 
-                                    editar_status_cliente_organizacao(lista_organizacao, 2);
-                                    break; 
-                                case 0: 
-                                    break;   
-                                default: 
-                                    printf("Entrada inválida\n"); 
-                                    break; 
-                            }
-                        } while (op7 != 0);
-                    }
-                    break;
-                    
-
-                case 3:
-                    if (lista_organizacao == NULL){
-                        printf("Não há clientes cadastrados!\n");
-                    }
-
-                    else{
-                        editar_cliente_organizacao(lista_organizacao);
-                    }
-
-                    break;
-
-                case 4:
-                    if (lista_organizacao==NULL)
-                    {
-                        printf("NÃO HA ORGANIZAÇÕES CADASTRADOS !!\n\n");
-                    }
-                    else{
-                        listar_clientes_org(lista_organizacao);
-                    }
-                    break;
-                case 5:
-                    menu_consulta_organizacao();
-                    scanf("%d",&op5);
-                    switch (op5)
-                    {
-                    case 1:
-                        consulta_org_cnpj(lista_organizacao);
-                        break;
-                    case 2:
-                        consulta_nome_org(lista_organizacao);
-                        break;
-                    case 3:
-                        menu_consulta_organizacao_status();
-                        scanf("%d",&op4);
-                        switch (op4)
-                        {
-                        case 1:
-                            consulta_org_status_ativo(lista_organizacao);
-                            break;
-                        case 2:
-                            consulta_org_status_inativo(lista_organizacao);
-                            break;
-                        default:
-                            break;
-                        }
-                        break;
-                    }
-                
-                default:
-                    break;
-                }
-            } while (op2!=0);
-            break;
-
-        case 3:
             do
             {
                 menu_entregas();
