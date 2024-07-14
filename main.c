@@ -144,7 +144,7 @@ int main(){
                     historico_recebidos_clientes(historico);
                     break;
 
-                case 7:
+                case 5:
                     historico_devolucao(lista_devolucao);
                     break;
                 case 0:
