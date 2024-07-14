@@ -840,8 +840,8 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
         // Atualizar atual para a próxima entrega e verificar destinatário
         while (fila->inicio != NULL && strcmp(fila->inicio->entrega->destinatario->id, atual->entrega->destinatario->id) == 0) {
             atual = fila->inicio;
-            valor = rand() % 5 + 1;
-            printf("VALOR: %d\n", valor);
+            //valor = rand() % 5 + 1;
+            //printf("VALOR: %d\n", valor);
 
             if (valor == 1 || valor == 3 || valor == 5) {
                 strcpy(atual->entrega->status, "ENTREGUE");
