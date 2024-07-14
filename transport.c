@@ -47,22 +47,19 @@ char* obter_data_atual() {
 No_simples_clientes_pessoas *cria_lista_pessoa(){
     return NULL;
 }
-No_simples_clientes_organizacoes *cria_lista_organizacao(){
-    return NULL;
-}
 
 
 No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *l){
     char cpf[15];
     int cont=0;
-    printf("INFORME O CPF DO CLIENTE: ");
+    printf("INFORME O CPF/CNPJ DO CLIENTE: ");
     scanf(" %[^\n]",cpf);
 
     No_simples_clientes_pessoas *aux2;
     aux2 = l;
     while (aux2)
     {
-        if (strcmp(aux2->cliente.cpf,cpf)==0)
+        if (strcmp(aux2->cliente.id,cpf)==0)
         {
             cont++;
         }
@@ -80,7 +77,7 @@ No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *l){
     printf("INFORME O NOME DO CLIENTE: ");
     scanf(" %[^\n]",novo->cliente.nome);
 
-    strcpy(novo->cliente.cpf,cpf);
+    strcpy(novo->cliente.id,cpf);
 
     printf("INFORME O TELEFONE DO CLIENTE: ");
     scanf(" %[^\n]",novo->cliente.telefone);
@@ -91,8 +88,6 @@ No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *l){
     printf("INFORME O EMAIL DO CLIENTE: ");
     scanf(" %[^\n]",novo->cliente.email);
 
-    printf("INFORME O SEXO DO CLIENTE: ");
-    scanf(" %[^\n]",novo->cliente.sexo);
 
     strcpy(novo->cliente.status_cliente,"ATIVO");
     novo->cliente.conta_entregas=0;
@@ -118,87 +113,22 @@ No_simples_clientes_pessoas *add_no_fim_pessoa(No_simples_clientes_pessoas *l){
 
 }
 
-No_simples_clientes_organizacoes *add_no_fim_org(No_simples_clientes_organizacoes *l){
-    char cnpj[20];
-    int cont=0;
-    printf("INFORME O CNPJ DA ORGANIZACAO: ");
-    scanf(" %[^\n]",cnpj);
-
-    No_simples_clientes_organizacoes *aux2;
-    aux2 = l;
-    while (aux2)
-    {
-        if (strcmp(aux2->cliente.cnpj,cnpj)==0)
-        {
-            cont++;
-        }
-        aux2=aux2->prox;
-    }
-
-    if (cont>0)
-    {
-        printf("ORGANIZACAO JA CADASTRADA !!\n\n");
-        return l;
-    }
-    
-    No_simples_clientes_organizacoes *aux,*novo = (No_simples_clientes_organizacoes*) malloc(sizeof(No_simples_clientes_organizacoes));
-    novo->prox=NULL;
-    
-    printf("INFORME O NOME DA ORGANIZACAO: ");
-    scanf(" %[^\n]",novo->cliente.nome);
-
-    strcpy(novo->cliente.cnpj,cnpj);
-
-    printf("INFORME O TELEFONE DA ORGANIZACAO: ");
-    scanf(" %[^\n]",novo->cliente.telefone);
-
-    printf("INFORME O ENDERECO DA ORGANIZACAO: ");
-    scanf(" %[^\n]",novo->cliente.endereco);
-
-    printf("INFORME O EMAIL DA ORGANIZACAO: ");
-    scanf(" %[^\n]",novo->cliente.email);
-
-    strcpy(novo->cliente.status_organizacao,"ATIVO");
-    novo->cliente.conta_entregas=0;
-
-    printf("ORGANIZACAO CADASTRADA !!\n\n");
-
-    if (l==NULL)
-    {
-        l=novo;
-    }
-    
-    else
-    {
-        aux = l;
-        while (aux->prox)
-        {
-            aux=aux->prox;
-        }
-        aux->prox=novo;
-    }
-    
-    return l;
-
-}
-
 
 void listar_clientes_pessoa(No_simples_clientes_pessoas *lista){
     No_simples_clientes_pessoas *aux;
     aux = lista;
-    printf("╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║             NOME             ║       CPF       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║      SEXO      ║     STATUS    ║  ENTREGAS  ║\n");
-    printf("╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+    printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║             NOME             ║       CPF/CNPJ       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║        STATUS     ║      ENTREGAS    ║\n");
+    printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
 
     while (aux)
     {
-        printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-14s ║ %-13s ║ %-10d ║\n",
+        printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-13s ║ %-10d ║\n",
         aux->cliente.nome,
-        aux->cliente.cpf,
+        aux->cliente.id,
         aux->cliente.telefone,
         aux->cliente.endereco,
         aux->cliente.email,
-        aux->cliente.sexo,
         aux->cliente.status_cliente,
         aux->cliente.conta_entregas);
         aux = aux->prox;
@@ -208,40 +138,15 @@ void listar_clientes_pessoa(No_simples_clientes_pessoas *lista){
 
 }
 
-void listar_clientes_org(No_simples_clientes_organizacoes *lista){
-    No_simples_clientes_organizacoes *aux;
-    aux = lista;
-
-    printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║             NOME             ║      CNPJ       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║     STATUS    ║  ENTREGAS  ║\n");
-    printf("╠═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
-
-    while (aux)
-    {
-        printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-13s ║ %-10d ║\n",
-        aux->cliente.nome,
-        aux->cliente.cnpj,
-        aux->cliente.telefone,
-        aux->cliente.endereco,
-        aux->cliente.email,
-        aux->cliente.status_organizacao,
-        aux->cliente.conta_entregas);
-        aux = aux->prox;
-    }
-
-    printf("╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
-    
-}
 
 void menu_principal()
 {
     printf("╔══════════════════════════════════════╗\n");
     printf("║         MENU TRANSPORTADORA          ║\n");
     printf("╠══════════════════════════════════════╣\n");
-    printf("║ [1] MENU DO CLIENTE PESSOA           ║\n");
-    printf("║ [2] MENU DO CLIENTE ORGANIZAÇÃO      ║\n");
-    printf("║ [3] MENU ENTREGAS                    ║\n");
-    printf("║ [4] SOBRE                            ║\n");
+    printf("║ [1] MENU DO CLIENTE                  ║\n");
+    printf("║ [2] MENU ENTREGAS                    ║\n");
+    printf("║ [3] SOBRE                            ║\n");
     printf("║ [0] SAIR                             ║\n");
     printf("╚══════════════════════════════════════╝\n\n");
 }
@@ -252,48 +157,33 @@ void menu_entregas(){
     printf("╠══════════════════════════════════════╣\n");
     printf("║ [1] PEDIDOS ESPERANDO ENTREGA        ║\n");
     printf("║ [2] REALIZAR ENTREGA                 ║\n");
-    printf("║ [3] HISTORICO DE ENVIADAS PESSOA     ║\n");
-    printf("║ [4] HISTORICO DE RECEBIDOS PESSOA    ║\n");
-    printf("║ [5] HISTORICO DE ENVIADAS ORG        ║\n");
-    printf("║ [6] HISTORICO DE RECEBIDOS ORG       ║\n");
-    printf("║ [7] PRODUTOS DEVOLVIDOS              ║\n");
+    printf("║ [3] HISTORICO DE ENVIOS              ║\n");
+    printf("║ [4] HISTORICO DE RECEBIMENTOS        ║\n");
+    printf("║ [5] PRODUTOS DEVOLVIDOS              ║\n");
     printf("║ [0] MENU ANTERIOR                    ║\n");
     printf("╚══════════════════════════════════════╝\n\n");
 }
 
-void menu_organizacao(){
-    printf("╔══════════════════════════════════════╗\n");
-    printf("║           MENU ORGANIZAÇÃO           ║\n");
-    printf("╠══════════════════════════════════════╣\n");
-    printf("║ [1] ADICIONAR CLIENTE ORGANIZACAO    ║\n");
-    printf("║ [2] MUDAR STATUS CLIENTE ORGANIZACAO ║\n");
-    printf("║ [3] EDITAR CLIENTE ORGANIZACAO       ║\n");
-    printf("║ [4] LISTAR CLIENTES ORGANIZACAO      ║\n");
-    printf("║ [5] CONSULTAR CLIENTE ORGANIZACAO    ║\n");
-    printf("║ [6] HISTORICO DE PEDIDOS ORGANIZAÇÃO ║\n");
-    printf("║ [7] REALIZAR POSTAGEM ORGANIZACAO    ║\n");
-    printf("║ [0] MENU ANTERIOR                    ║\n");
-    printf("╚══════════════════════════════════════╝\n\n");
-}
+
 
 void menu_cliente_pessoa(){
     printf("╔══════════════════════════════════════╗\n");
     printf("║             MENU CLIENTE             ║\n");
     printf("╠══════════════════════════════════════╣\n");
-    printf("║ [1] ADICIONAR CLIENTE PESSOA         ║\n");
-    printf("║ [2] MUDAR STATUS CLIENTE PESSOA      ║\n");
-    printf("║ [3] EDITAR CLIENTE PESSOA            ║\n");
-    printf("║ [4] LISTAR CLIENTES PESSOA           ║\n");
-    printf("║ [5] CONSULTAR CLIENTE PESSOA         ║\n");
-    printf("║ [6] HISTORICO DE PEDIDOS CLIENTE     ║\n");
-    printf("║ [7] REALIZAR POSTAGEM POR PESSOA     ║\n");
+    printf("║ [1] ADICIONAR CLIENTE                ║\n");
+    printf("║ [2] MUDAR STATUS CLIENTE             ║\n");
+    printf("║ [3] EDITAR CLIENTE                   ║\n");
+    printf("║ [4] LISTAR CLIENTES                  ║\n");
+    printf("║ [5] CONSULTAR CLIENTE                ║\n");
+    printf("║ [6] HISTORICO DE PEDIDOS             ║\n");
+    printf("║ [7] REALIZAR POSTAGEM                ║\n");
     printf("║ [0] MENU ANTERIOR                    ║\n");
     printf("╚══════════════════════════════════════╝\n\n");
 }
 
 void menu_consulta_cliente(){
     printf("╔══════════════════════════════════════╗\n");
-    printf("║ [1] CONSULTAR PELO CPF               ║\n");
+    printf("║ [1] CONSULTAR PELO CPF/CNPJ          ║\n");
     printf("║ [2] CONSULTAR PELO NOME              ║\n");
     printf("║ [3] CONSULTAR PELO STATUS            ║\n");
     printf("║ [0] MENU ANTERIOR                    ║\n");
@@ -308,38 +198,16 @@ void menu_consulta_cliente_status(){
     printf("╚══════════════════════════════════════╝\n\n");
 }
 
-void menu_consulta_organizacao(){
-    printf("╔══════════════════════════════════════╗\n");
-    printf("║ [1] CONSULTAR PELO CPF               ║\n");
-    printf("║ [2] CONSULTAR PELO NOME              ║\n");
-    printf("║ [3] CONSULTAR PELO STATUS            ║\n");
-    printf("║ [0] MENU ANTERIOR                    ║\n");
-    printf("╚══════════════════════════════════════╝\n\n");
-}
 
-void menu_consulta_organizacao_status(){
-    printf("╔══════════════════════════════════════╗\n");
-    printf("║ [1] STATUS ATIVO                     ║\n");
-    printf("║ [2] STATUS INATIVO                   ║\n");
-    printf("║ [0] MENU ANTERIOR                    ║\n");
-    printf("╚══════════════════════════════════════╝\n\n");
-}
 
 void menu_editar_status_cliente_avulso(){
     printf("╔══════════════════════════════════════╗\n");
-    printf("║ [1] BUSCAR PELO CPF                  ║\n");
+    printf("║ [1] BUSCAR PELO CPF/CNPJ             ║\n");
     printf("║ [2] CONSULTAR PELO NOME              ║\n");
     printf("║ [0] MENU ANTERIOR                    ║\n");
     printf("╚══════════════════════════════════════╝\n\n");
 } 
 
-void menu_editar_status_cliente_Organizacao(){
-    printf("╔══════════════════════════════════════╗\n");
-    printf("║ [1] BUSCAR PELO CNPJ                 ║\n");
-    printf("║ [2] CONSULTAR PELO NOME              ║\n");
-    printf("║ [0] MENU ANTERIOR                    ║\n");
-    printf("╚══════════════════════════════════════╝\n\n");
-}  
 
 void editar_status_cliente_avulso(No_simples_clientes_pessoas *lista, int opcao){
     if (lista == NULL){
@@ -352,10 +220,10 @@ void editar_status_cliente_avulso(No_simples_clientes_pessoas *lista, int opcao)
     char nome[50]; 
     
     if (opcao == 1){ 
-        printf("Informe o cpf do cliente que deseja editar: ");
+        printf("Informe o CPF/CNPJ do cliente que deseja editar: ");
         scanf(" %[^\n]", cpf);
 
-        while (aux != NULL && strcmp(aux->cliente.cpf, cpf) != 0){
+        while (aux != NULL && strcmp(aux->cliente.id, cpf) != 0){
             aux = aux->prox;
         }
 
@@ -390,7 +258,7 @@ void editar_status_cliente_avulso(No_simples_clientes_pessoas *lista, int opcao)
 
     if(strcmp(aux->cliente.status_cliente, status_temp) == 0){
         do {
-            printf("Organização encontrada, de nome %s, com o status atual %s, deseja torna-lo ATIVO ? (1-Para SIM, 2-Para NÃO)\n", aux->cliente.nome, aux->cliente.status_cliente); 
+            printf("Cliente encontrado, de nome %s, com o status atual %s, deseja torna-lo ATIVO ? (1-Para SIM, 2-Para NÃO)\n", aux->cliente.nome, aux->cliente.status_cliente); 
             scanf("%d", &op1); 
             if (op1 == 1) {
                 strcpy(aux->cliente.status_cliente, status_ativo);  
@@ -412,87 +280,6 @@ void editar_status_cliente_avulso(No_simples_clientes_pessoas *lista, int opcao)
 }     
 
 
-void editar_status_cliente_organizacao(No_simples_clientes_organizacoes *lista, int opcao){
-    if (lista == NULL){
-        printf("Não existem clientes cadastrados!\n");
-        return;
-    }
-
-    No_simples_clientes_organizacoes *aux = lista;
-    char cnpj[15];
-    char nome[50]; 
-    
-    if (opcao == 1){ 
-        printf("Informe o CNPJ da Organização que deseja editar: ");
-        scanf(" %[^\n]", cnpj);
-
-        while (aux != NULL && strcmp(aux->cliente.cnpj, cnpj) != 0){
-            aux = aux->prox;
-        }
-
-        if (aux == NULL){
-            printf("Organização não encontrada!\n");
-            return;
-        } 
-    }
-    if (opcao == 2){ 
-        printf("Informe o nome Fantasia da Organização que deseja editar: ");
-        scanf(" %[^\n]", nome);
-
-        while (aux != NULL && strcmp(aux->cliente.nome, nome) != 0){
-            aux = aux->prox;
-        }
-
-        if (aux == NULL){
-            printf("Organização não encontrada!\n");
-            return;
-        } 
-    }    
-
-    int op1, op2; 
-
-    char status_temp[8];
-    char status_ativo[8];
-
-    strcpy(status_temp, "INATIVO"); 
-    strcpy(status_ativo, "ATIVO"); 
-
-    if (strcmp(aux->cliente.status_organizacao, status_temp) == 0) { 
-        do {
-            printf("Organização encontrada, de nome %s, com o status atual %s, deseja torna-lo ATIVO ? (1-Para SIM, 2-Para NÃO)\n", aux->cliente.nome, aux->cliente.status_organizacao); 
-            scanf("%d", &op1); 
-            if (op1 == 1) {
-                strcpy(aux->cliente.status_organizacao, status_ativo);  
-                printf("STATUS ALTERADO COM SUCESSO!\n"); 
-            } 
-        } while (op1 < 1 || op1 > 2); 
-    } else {
-        do {
-            printf("Organização encontrada, de nome %s, com o status atual %s, deseja torna-lo INATIVO ? (1-Para SIM, 2-Para NÃO)\n", aux->cliente.nome, aux->cliente.status_organizacao); 
-            scanf("%d", &op2); 
-            if (op2 == 1) {
-                strcpy(aux->cliente.status_organizacao, status_temp);  
-                printf("STATUS ALTERADO COM SUCESSO!\n"); 
-            } 
-        } while (op2 < 1 || op2 > 2); 
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 void consulta_cliente_cpf(No_simples_clientes_pessoas *lista){
@@ -503,29 +290,28 @@ void consulta_cliente_cpf(No_simples_clientes_pessoas *lista){
     }
 
     char cpf[15];
-    printf("INFORME O CPF DO CLIENTE: ");
+    printf("INFORME O CPF/CNPJ DO CLIENTE: ");
     scanf(" %[^\n]",cpf);
 
     No_simples_clientes_pessoas *aux;
     aux = lista;
     int cont=0;
 
-    printf("╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║             NOME             ║       CPF       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║      SEXO      ║     STATUS    ║  ENTREGAS  ║\n");
-    printf("╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+    printf("╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║             NOME             ║       CPF/CNPJ       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║      STATUS    ║      ENTREGAS     ║\n");
+    printf("╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
 
 
     while (aux)
     {
-        if (strcmp(aux->cliente.cpf,cpf)==0)
+        if (strcmp(aux->cliente.id,cpf)==0)
         {
-            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-14s ║ %-13s ║ %-10d ║\n",
+            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-13s ║ %-10d ║\n",
             aux->cliente.nome,
-            aux->cliente.cpf,
+            aux->cliente.id,
             aux->cliente.telefone,
             aux->cliente.endereco,
             aux->cliente.email,
-            aux->cliente.sexo,
             aux->cliente.status_cliente,
             aux->cliente.conta_entregas);
             cont++;
@@ -556,21 +342,20 @@ void consulta_cliente_nome(No_simples_clientes_pessoas *lista){
     aux = lista;
     int cont=0;
 
-    printf("╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║             NOME             ║       CPF       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║      SEXO      ║     STATUS    ║  ENTREGAS  ║\n");
-    printf("╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+    printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║             NOME             ║       CPF/CNPJ       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║        STATUS     ║      ENTREGAS    ║\n");
+    printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
 
     while (aux)
     {
         if (strcmp(aux->cliente.nome,nome)==0)
         {
-            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-14s ║ %-13s ║ %-10d ║\n",
+            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-13s ║ %-10d ║\n",
             aux->cliente.nome,
-            aux->cliente.cpf,
+            aux->cliente.id,
             aux->cliente.telefone,
             aux->cliente.endereco,
             aux->cliente.email,
-            aux->cliente.sexo,
             aux->cliente.status_cliente,
             aux->cliente.conta_entregas);
             cont++;
@@ -596,21 +381,20 @@ void consulta_cliente_status_ativo(No_simples_clientes_pessoas *lista){
     aux = lista;
     int cont=0;
 
-    printf("╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║             NOME             ║       CPF       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║      SEXO      ║     STATUS    ║  ENTREGAS  ║\n");
-    printf("╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+    printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║             NOME             ║       CPF/CNPJ       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║        STATUS     ║      ENTREGAS    ║\n");
+    printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
 
     while (aux)
     {
         if (strcmp(aux->cliente.status_cliente,"ATIVO")==0)
         {
-            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-14s ║ %-13s ║ %-10d ║\n",
+            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-13s ║ %-10d ║\n",
             aux->cliente.nome,
-            aux->cliente.cpf,
+            aux->cliente.id,
             aux->cliente.telefone,
             aux->cliente.endereco,
             aux->cliente.email,
-            aux->cliente.sexo,
             aux->cliente.status_cliente,
             aux->cliente.conta_entregas);
             cont++;
@@ -636,21 +420,20 @@ void consulta_cliente_status_inativo(No_simples_clientes_pessoas *lista){
     aux = lista;
     int cont=0;
 
-    printf("╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║             NOME             ║       CPF       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║      SEXO      ║     STATUS    ║  ENTREGAS  ║\n");
-    printf("╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+    printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║             NOME             ║       CPF/CNPJ       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║        STATUS     ║      ENTREGAS    ║\n");
+    printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
 
     while (aux)
     {
         if (strcmp(aux->cliente.status_cliente,"INATIVO")==0)
         {
-            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-14s ║ %-13s ║ %-10d ║\n",
+            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-13s ║ %-10d ║\n",
             aux->cliente.nome,
-            aux->cliente.cpf,
+            aux->cliente.id,
             aux->cliente.telefone,
             aux->cliente.endereco,
             aux->cliente.email,
-            aux->cliente.sexo,
             aux->cliente.status_cliente,
             aux->cliente.conta_entregas);
             cont++;
@@ -665,187 +448,16 @@ void consulta_cliente_status_inativo(No_simples_clientes_pessoas *lista){
     }
 }
 
-void consulta_org_cnpj(No_simples_clientes_organizacoes *lista){
-    if (lista==NULL)
-    {
-        printf("NÃO HA ORGANIZACOES CADASTRADAS !!\n\n");
-        return;
-    }
-
-    char cnpj[20];
-    printf("INFORME O CNPJ DA ORGANIZACAO: ");
-    scanf(" %[^\n]",cnpj);
-
-    No_simples_clientes_organizacoes *aux;
-    aux = lista;
-    int cont=0;
-
-    printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║             NOME             ║      CNPJ       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║     STATUS    ║  ENTREGAS  ║\n");
-    printf("╠═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
-
-
-    while (aux)
-    {
-        if (strcmp(aux->cliente.cnpj,cnpj)==0)
-        {
-            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-13s ║ %-10d ║\n",
-            aux->cliente.nome,
-            aux->cliente.cnpj,
-            aux->cliente.telefone,
-            aux->cliente.endereco,
-            aux->cliente.email,
-            aux->cliente.status_organizacao,
-            aux->cliente.conta_entregas);
-            cont++;
-        }
-        aux = aux->prox;
-    }
-
-    printf("╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
-
-    if (cont==0)
-    {
-        printf("ORGANIZACAO NÃO ENCONTRADA !!\n\n");
-    }
-
-}
-
-void consulta_nome_org(No_simples_clientes_organizacoes *lista){
-    if (lista==NULL)
-    {
-        printf("NÃO HA ORGANIZACOES CADASTRADAS !!\n\n");
-        return;
-    }
-
-    char nome[50];
-    printf("INFORME O NOME DA ORGANIZACAO: ");
-    scanf(" %[^\n]",nome);
-
-    No_simples_clientes_organizacoes *aux;
-    aux = lista;
-    int cont=0;
-
-    printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║             NOME             ║      CNPJ       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║     STATUS    ║  ENTREGAS  ║\n");
-    printf("╠═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
-
-    while (aux)
-    {
-        if (strcmp(aux->cliente.nome,nome)==0)
-        {
-            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-13s ║ %-10d ║\n",
-            aux->cliente.nome,
-            aux->cliente.cnpj,
-            aux->cliente.telefone,
-            aux->cliente.endereco,
-            aux->cliente.email,
-            aux->cliente.status_organizacao,
-            aux->cliente.conta_entregas);
-            cont++;
-        }
-        aux = aux->prox;
-    }
-    printf("╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
-
-    
-    if (cont==0)
-    {
-        printf("ORGANIZACAO NÃO ENCONTRADA !!\n\n");
-    }
-
-}
-
-void consulta_org_status_ativo(No_simples_clientes_organizacoes *lista){
-    if (lista==NULL)
-    {
-        printf("NÃO HA ORGANIZACOES CADASTRADAS !!\n\n");
-        return;
-    }
-
-    No_simples_clientes_organizacoes *aux;
-    aux = lista;
-    int cont=0;
-
-    printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║             NOME             ║      CNPJ       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║     STATUS    ║  ENTREGAS  ║\n");
-    printf("╠═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
-
-    while (aux)
-    {
-        if (strcmp(aux->cliente.status_organizacao,"ATIVO")==0)
-        {
-            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-13s ║ %-10d ║\n",
-            aux->cliente.nome,
-            aux->cliente.cnpj,
-            aux->cliente.telefone,
-            aux->cliente.endereco,
-            aux->cliente.email,
-            aux->cliente.status_organizacao,
-            aux->cliente.conta_entregas);
-            cont++;
-        }
-        aux = aux->prox;
-    }
-
-    printf("╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
-
-    if (cont==0)
-    {
-        printf("ORGANIZACAO NÃO ENCONTRADA !!\n\n");
-    }
-}
-
-void consulta_org_status_inativo(No_simples_clientes_organizacoes *lista){
-    if (lista==NULL)
-    {
-        printf("NÃO HA ORGANIZACOES CADASTRADAS !!\n\n");
-        return;
-    }
-
-    No_simples_clientes_organizacoes *aux;
-    aux = lista;
-    int cont=0;
-
-    printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║             NOME             ║      CNPJ       ║    TELEFONE     ║          ENDEREÇO            ║             EMAIL            ║     STATUS    ║  ENTREGAS  ║\n");
-    printf("╠═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
-
-    while (aux)
-    {
-        if (strcmp(aux->cliente.status_organizacao,"INATIVO")==0)
-        {
-            printf("║ %-28s ║ %-15s ║ %-15s ║ %-28s ║ %-28s ║ %-13s ║ %-10d ║\n",
-            aux->cliente.nome,
-            aux->cliente.cnpj,
-            aux->cliente.telefone,
-            aux->cliente.endereco,
-            aux->cliente.email,
-            aux->cliente.status_organizacao,
-            aux->cliente.conta_entregas);
-            cont++;
-        }
-        aux = aux->prox;
-    }
-
-    printf("╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
-
-    if (cont==0)
-    {
-        printf("ORGANIZACAO NÃO ENCONTRADA !!\n\n");
-    }
-}
 
 void menu_editar_cliente(){
     printf("╔══════════════════════════════════════╗\n");
     printf("║         MENU EDITAR CLIENTE          ║\n");
     printf("╠══════════════════════════════════════╣\n");
     printf("║ [1] EDITAR NOME                      ║\n");
-    printf("║ [2] EDITAR CPF                       ║\n");
+    printf("║ [2] EDITAR CPF/CNPJ                  ║\n");
     printf("║ [3] EDITAR TELEFONE                  ║\n");
     printf("║ [4] EDITAR ENDEREÇO                  ║\n");
     printf("║ [5] EDITAR EMAIL                     ║\n");
-    printf("║ [6] EDITAR SEXO                      ║\n");
     printf("║ [0] SAIR                             ║\n");
     printf("╚══════════════════════════════════════╝\n\n");
 }
@@ -862,7 +474,7 @@ void editar_cliente_avulso(No_simples_clientes_pessoas *lista){
     printf("Informe o cpf do cliente que deseja editar: ");
     scanf(" %[^\n]", cpf);
 
-    while (aux != NULL && strcmp(aux->cliente.cpf, cpf) != 0){
+    while (aux != NULL && strcmp(aux->cliente.id, cpf) != 0){
         aux = aux->prox;
     }
 
@@ -886,100 +498,8 @@ void editar_cliente_avulso(No_simples_clientes_pessoas *lista){
             break;
 
         case 2:
-            printf("Informe o novo cpf do cliente: ");
-            scanf(" %[^\n]", aux->cliente.cpf);
-            break;
-
-        case 3:
-            printf("Informe o novo telefone do cliente: ");
-            scanf(" %[^\n]", aux->cliente.telefone);
-            break;
-
-        case 4:
-            printf("Informe o novo endereço do cliente: ");
-            scanf(" %[^\n]", aux->cliente.endereco);
-            break;
-
-        case 5:
-            printf("Informe o novo email do cliente: ");
-            scanf(" %[^\n]", aux->cliente.email);
-            break;
-
-        case 6:
-            printf("Informe o novo sexo do cliente: ");
-            scanf(" %[^\n]", aux->cliente.sexo);
-            break;
-
-        case 0:
-            break;
-        
-        default:
-            printf("Opção inválida!\n");
-            break;
-        }
-    
-        if (op != 0){
-            printf("Deseja alterar mais alguma coisa (1 - SIM / 0 - NÃO): ");
-            scanf("%d", &op);
-        }
-        
-    } while (op != 0);
-}
-
-
-
-void menu_editar_organizacao(){
-    printf("╔══════════════════════════════════════╗\n");
-    printf("║         MENU EDITAR ORGANIZAÇÃO      ║\n");
-    printf("╠══════════════════════════════════════╣\n");
-    printf("║ [1] EDITAR NOME                      ║\n");
-    printf("║ [2] EDITAR CNPJ                      ║\n");
-    printf("║ [3] EDITAR TELEFONE                  ║\n");
-    printf("║ [4] EDITAR ENDEREÇO                  ║\n");
-    printf("║ [5] EDITAR EMAIL                     ║\n");
-    printf("║ [0] SAIR                             ║\n");
-    printf("╚══════════════════════════════════════╝\n\n");
-}
-
-
-void editar_cliente_organizacao(No_simples_clientes_organizacoes *lista){
-    if (lista == NULL){
-        printf("Não existem clientes cadastrados!\n");
-        return;
-    }
-
-    No_simples_clientes_organizacoes *aux = lista;
-    char cnpj[15];
-
-    printf("Informe o cpf do cliente que deseja editar: ");
-    scanf(" %[^\n]", cnpj);
-
-    while (aux != NULL && strcmp(aux->cliente.cnpj, cnpj) != 0){
-        aux = aux->prox;
-    }
-
-    if (aux == NULL){
-        printf("Cliente não encontrado!\n");
-        return;
-    }
-
-    int op;
-
-    do
-    {
-        menu_editar_organizacao();
-        scanf("%d", &op);
-
-        switch (op)
-        {
-        case 1:
-            printf("Informe o novo nome do cliente: ");
-            scanf(" %[^\n]", aux->cliente.nome);
-            break;
-
-        case 2:
-            printf("Informe o novo cpf do cliente: ");
-            scanf(" %[^\n]", aux->cliente.cnpj);
+            printf("Informe o novo CPF/CNPJ do cliente: ");
+            scanf(" %[^\n]", aux->cliente.id);
             break;
 
         case 3:
@@ -1012,7 +532,6 @@ void editar_cliente_organizacao(No_simples_clientes_organizacoes *lista){
         
     } while (op != 0);
 }
-
 
 
 Fila* fila_cria(void){
@@ -1046,7 +565,7 @@ void fila_insere_ordenado(Fila* f, Entrega *entrega) {
     No *anterior = NULL;
 
     // Percorrer a fila para encontrar a posição correta
-    while (atual != NULL && strcmp(atual->entrega->destinatario->cpf, entrega->destinatario->cpf) != 0) {
+    while (atual != NULL && strcmp(atual->entrega->destinatario->id, entrega->destinatario->id) != 0) {
         anterior = atual;
         atual = atual->prox;
     }
@@ -1182,7 +701,7 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
         return fila;
     }
 
-    if (*conta_entregas == 6){
+    if (*conta_entregas == 3){
         printf("Limite de postagens atingido!\n");
         return fila;
     }
@@ -1191,10 +710,10 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
     No_simples_clientes_pessoas *aux_remetente = lista;
     char cpf[15];
 
-    printf("INFORME O CPF DO CLIENTE QUE DESEJA REALIZAR A POSTAGEM: ");
+    printf("INFORME O CPF/CNPJ DO CLIENTE QUE DESEJA REALIZAR A POSTAGEM: ");
     scanf(" %[^\n]", cpf);
 
-    while (aux_remetente != NULL && strcmp(aux_remetente->cliente.cpf, cpf) != 0){
+    while (aux_remetente != NULL && strcmp(aux_remetente->cliente.id, cpf) != 0){
         aux_remetente = aux_remetente->prox;
     }
 
@@ -1207,8 +726,8 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
 
     
     Entrega *entrega = (Entrega *)malloc(sizeof(Entrega));
-    entrega->remetente_pessoa = (Cliente_pessoa*) malloc(sizeof(Cliente_pessoa));
-    entrega->destinatario = (Cliente_pessoa*) malloc(sizeof(Cliente_pessoa));
+    entrega->remetente_pessoa = (Cliente*) malloc(sizeof(Cliente));
+    entrega->destinatario = (Cliente*) malloc(sizeof(Cliente));
 
     if (entrega == NULL){
         printf("Memória insuficiente!\n");
@@ -1221,7 +740,7 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
     scanf(" %[^\n]", entrega->destinatario->nome);
 
     printf("INFORME O CPF DO DESTINATÁRIO: ");
-    scanf(" %[^\n]", entrega->destinatario->cpf);
+    scanf(" %[^\n]", entrega->destinatario->id);
 
     printf("INFORME O TELEFONE DO DESTINATÁRIO: ");
     scanf(" %[^\n]", entrega->destinatario->telefone);
@@ -1232,10 +751,11 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
     printf("INFORME O EMAIL DO DESTINATÁRIO: ");
     scanf(" %[^\n]", entrega->destinatario->email);
 
-    printf("INFORME O SEXO DO DESTINATÁRIO: ");
-    scanf(" %[^\n]", entrega->destinatario->sexo);
-
-    entrega->remetente_pessoa = &(aux_remetente->cliente);
+    strcpy(entrega->remetente_pessoa->nome, aux_remetente->cliente.nome);
+    strcpy(entrega->remetente_pessoa->id, aux_remetente->cliente.id);
+    strcpy(entrega->remetente_pessoa->telefone, aux_remetente->cliente.telefone);
+    strcpy(entrega->remetente_pessoa->endereco, aux_remetente->cliente.endereco);
+    strcpy(entrega->remetente_pessoa->email, aux_remetente->cliente.email);
     entrega->horaPostagem = obter_hora_atual();
     entrega->dataPostagem = obter_data_atual();
 
@@ -1245,22 +765,20 @@ Fila *realizar_postagem_por_pessoa(Fila *fila, No_simples_clientes_pessoas *list
 
     printf("║ %-25s : %-56d               ║\n", "ID DO PEDIDO", entrega->id);
     printf("║ %-25s : %-56s               ║\n", "NOME DO REMETENTE", aux_remetente->cliente.nome);
-    printf("║ %-25s : %-56s               ║\n", "CPF DO REMETENTE", aux_remetente->cliente.cpf);
+    printf("║ %-25s : %-56s               ║\n", "CPF/CNPJ DO REMETENTE", aux_remetente->cliente.id);
     printf("║ %-25s : %-56s               ║\n", "TELEFONE DO REMETENTE", aux_remetente->cliente.telefone);
     printf("║ %-26s : %-56s               ║\n", "ENDEREÇO DO REMETENTE", aux_remetente->cliente.endereco);
     printf("║ %-25s : %-56s               ║\n", "EMAIL DO REMETENTE", aux_remetente->cliente.email);
-    printf("║ %-25s : %-56s               ║\n", "SEXO DO REMETENTE", aux_remetente->cliente.sexo);
     printf("║ %-25s : %-56s               ║\n", "HORA DA POSTAGEM", entrega->horaPostagem);
     printf("║ %-25s : %-56s               ║\n", "DATA DA POSTAGEM", entrega->dataPostagem);
 
     printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
 
     printf("║ %-26s : %-56s               ║\n", "NOME DO DESTINATÁRIO", entrega->destinatario->nome);
-    printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", entrega->destinatario->cpf);
+    printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", entrega->destinatario->id);
     printf("║ %-26s : %-56s               ║\n", "TELEFONE DO DESTINATÁRIO", entrega->destinatario->telefone);
     printf("║ %-27s : %-56s               ║\n", "ENDEREÇO DO DESTINATÁRIO", entrega->destinatario->endereco);
     printf("║ %-26s : %-56s               ║\n", "EMAIL DO DESTINATÁRIO", entrega->destinatario->email);
-    printf("║ %-26s : %-56s               ║\n", "SEXO DO DESTINATÁRIO", entrega->destinatario->sexo);
 
     printf("╚════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
 
@@ -1293,7 +811,7 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
         return;
     }
 
-    if (*conta_entregas < 6) {
+    if (*conta_entregas < 3) {
         printf("LIMITE DE POSTAGENS NÃO ATINGIDO!\n");
         return;
     }
@@ -1320,10 +838,10 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
         }
 
         // Atualizar atual para a próxima entrega e verificar destinatário
-        while (fila->inicio != NULL && strcmp(fila->inicio->entrega->destinatario->cpf, atual->entrega->destinatario->cpf) == 0) {
+        while (fila->inicio != NULL && strcmp(fila->inicio->entrega->destinatario->id, atual->entrega->destinatario->id) == 0) {
             atual = fila->inicio;
-            //valor = rand() % 5 + 1;
-            //printf("VALOR: %d\n", valor);
+            valor = rand() % 5 + 1;
+            printf("VALOR: %d\n", valor);
 
             if (valor == 1 || valor == 3 || valor == 5) {
                 strcpy(atual->entrega->status, "ENTREGUE");
@@ -1366,7 +884,7 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
         }
 
         // Processar entregas subsequentes com o mesmo destinatário usando o mesmo valor
-        while (*pilha_nao_entregues != NULL && strcmp((*pilha_nao_entregues)->entrega->destinatario->cpf, aux->entrega->destinatario->cpf) == 0) {
+        while (*pilha_nao_entregues != NULL && strcmp((*pilha_nao_entregues)->entrega->destinatario->id, aux->entrega->destinatario->id) == 0) {
             aux = *pilha_nao_entregues;
 
             if (valor == 1 || valor == 3 || valor == 5) {
@@ -1391,7 +909,7 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
     }
 
     *conta_entregas = 0;
-}
+} 
 
 
 
@@ -1405,7 +923,7 @@ void imprimir_fila(Fila *fila) {
     while (atual != NULL) {
         printf("║ %-4d ║ %-16s ║ %-34s ║ %-10s ║ %-8s ║ %-10s ║\n", 
                 atual->entrega->id,
-                atual->entrega->destinatario->cpf, 
+                atual->entrega->destinatario->id, 
                 atual->entrega->destinatario->endereco, 
                 atual->entrega->dataPostagem, 
                 atual->entrega->horaPostagem,
@@ -1430,7 +948,7 @@ void historico_recebidos_clientes(No_simples_entregas *lista){
 
     while (aux !=NULL)
     {
-        if (strcmp(aux->entrega->destinatario->cpf, cpf) == 0)
+        if (strcmp(aux->entrega->destinatario->id, cpf) == 0)
         {
             printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
             printf("║                                       NOTA FISCAL                                                  ║\n");
@@ -1440,22 +958,20 @@ void historico_recebidos_clientes(No_simples_entregas *lista){
 
             printf("║ %-25s : %-56d               ║\n", "ID DO PEDIDO", aux->entrega->id);
             printf("║ %-25s : %-56s               ║\n", "NOME DO REMETENTE", aux->entrega->remetente_pessoa->nome);
-            printf("║ %-25s : %-56s               ║\n", "CPF DO REMETENTE", aux->entrega->remetente_pessoa->cpf);
+            printf("║ %-25s : %-56s               ║\n", "CPF DO REMETENTE", aux->entrega->remetente_pessoa->id);
             printf("║ %-25s : %-56s               ║\n", "TELEFONE DO REMETENTE", aux->entrega->remetente_pessoa->telefone);
             printf("║ %-26s : %-56s               ║\n", "ENDEREÇO DO REMETENTE", aux->entrega->remetente_pessoa->endereco);
             printf("║ %-25s : %-56s               ║\n", "EMAIL DO REMETENTE", aux->entrega->remetente_pessoa->email);
-            printf("║ %-25s : %-56s               ║\n", "SEXO DO REMETENTE", aux->entrega->remetente_pessoa->sexo);
             printf("║ %-25s : %-56s               ║\n", "HORA DA POSTAGEM", aux->entrega->horaPostagem);
             printf("║ %-25s : %-56s               ║\n", "DATA DA POSTAGEM", aux->entrega->dataPostagem);
 
             printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
 
             printf("║ %-26s : %-56s               ║\n", "NOME DO DESTINATÁRIO", aux->entrega->destinatario->nome);
-            printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", aux->entrega->destinatario->cpf);
+            printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", aux->entrega->destinatario->id);
             printf("║ %-26s : %-56s               ║\n", "TELEFONE DO DESTINATÁRIO", aux->entrega->destinatario->telefone);
             printf("║ %-27s : %-56s               ║\n", "ENDEREÇO DO DESTINATÁRIO", aux->entrega->destinatario->endereco);
             printf("║ %-26s : %-56s               ║\n", "EMAIL DO DESTINATÁRIO", aux->entrega->destinatario->email);
-            printf("║ %-26s : %-56s               ║\n", "SEXO DO DESTINATÁRIO", aux->entrega->destinatario->sexo);
             printf("║ %-25s : %-56s               ║\n", "HORA DA ENTREGA", aux->entrega->horaEntrega);
             printf("║ %-25s : %-56s               ║\n", "DATA DA ENTREGA", aux->entrega->dataEntrega);
             printf("║ %-25s : %-56s               ║\n", "STATUS", aux->entrega->status);
@@ -1482,7 +998,7 @@ void historico_enviados_clientes(No_simples_entregas *lista){
 
     while (aux !=NULL)
     {
-        if (strcmp(aux->entrega->remetente_pessoa->cpf, cpf) == 0)
+        if (strcmp(aux->entrega->remetente_pessoa->id, cpf) == 0)
         {
             printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
             printf("║                                       NOTA FISCAL                                                  ║\n");
@@ -1492,22 +1008,20 @@ void historico_enviados_clientes(No_simples_entregas *lista){
 
             printf("║ %-25s : %-56d               ║\n", "ID DO PEDIDO", aux->entrega->id);
             printf("║ %-25s : %-56s               ║\n", "NOME DO REMETENTE", aux->entrega->remetente_pessoa->nome);
-            printf("║ %-25s : %-56s               ║\n", "CPF DO REMETENTE", aux->entrega->remetente_pessoa->cpf);
+            printf("║ %-25s : %-56s               ║\n", "CPF/CNPJ DO REMETENTE", aux->entrega->remetente_pessoa->id);
             printf("║ %-25s : %-56s               ║\n", "TELEFONE DO REMETENTE", aux->entrega->remetente_pessoa->telefone);
             printf("║ %-26s : %-56s               ║\n", "ENDEREÇO DO REMETENTE", aux->entrega->remetente_pessoa->endereco);
             printf("║ %-25s : %-56s               ║\n", "EMAIL DO REMETENTE", aux->entrega->remetente_pessoa->email);
-            printf("║ %-25s : %-56s               ║\n", "SEXO DO REMETENTE", aux->entrega->remetente_pessoa->sexo);
             printf("║ %-25s : %-56s               ║\n", "HORA DA POSTAGEM", aux->entrega->horaPostagem);
             printf("║ %-25s : %-56s               ║\n", "DATA DA POSTAGEM", aux->entrega->dataPostagem);
 
             printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
 
             printf("║ %-26s : %-56s               ║\n", "NOME DO DESTINATÁRIO", aux->entrega->destinatario->nome);
-            printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", aux->entrega->destinatario->cpf);
+            printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", aux->entrega->destinatario->id);
             printf("║ %-26s : %-56s               ║\n", "TELEFONE DO DESTINATÁRIO", aux->entrega->destinatario->telefone);
             printf("║ %-27s : %-56s               ║\n", "ENDEREÇO DO DESTINATÁRIO", aux->entrega->destinatario->endereco);
             printf("║ %-26s : %-56s               ║\n", "EMAIL DO DESTINATÁRIO", aux->entrega->destinatario->email);
-            printf("║ %-26s : %-56s               ║\n", "SEXO DO DESTINATÁRIO", aux->entrega->destinatario->sexo);
             printf("║ %-25s : %-56s               ║\n", "HORA DA ENTREGA", aux->entrega->horaEntrega);
             printf("║ %-25s : %-56s               ║\n", "DATA DA ENTREGA", aux->entrega->dataEntrega);
             printf("║ %-25s : %-56s               ║\n", "STATUS", aux->entrega->status);
@@ -1538,22 +1052,20 @@ void historico_devolucao(No_simples_entregas *lista){
 
         printf("║ %-25s : %-56d               ║\n", "ID DO PEDIDO", aux->entrega->id);
         printf("║ %-25s : %-56s               ║\n", "NOME DO REMETENTE", aux->entrega->remetente_pessoa->nome);
-        printf("║ %-25s : %-56s               ║\n", "CPF DO REMETENTE", aux->entrega->remetente_pessoa->cpf);
+        printf("║ %-25s : %-56s               ║\n", "CPF/CNPJ DO REMETENTE", aux->entrega->remetente_pessoa->id);
         printf("║ %-25s : %-56s               ║\n", "TELEFONE DO REMETENTE", aux->entrega->remetente_pessoa->telefone);
         printf("║ %-26s : %-56s               ║\n", "ENDEREÇO DO REMETENTE", aux->entrega->remetente_pessoa->endereco);
         printf("║ %-25s : %-56s               ║\n", "EMAIL DO REMETENTE", aux->entrega->remetente_pessoa->email);
-        printf("║ %-25s : %-56s               ║\n", "SEXO DO REMETENTE", aux->entrega->remetente_pessoa->sexo);
         printf("║ %-25s : %-56s               ║\n", "HORA DA POSTAGEM", aux->entrega->horaPostagem);
         printf("║ %-25s : %-56s               ║\n", "DATA DA POSTAGEM", aux->entrega->dataPostagem);
 
         printf("╠════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
 
         printf("║ %-26s : %-56s               ║\n", "NOME DO DESTINATÁRIO", aux->entrega->destinatario->nome);
-        printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", aux->entrega->destinatario->cpf);
+        printf("║ %-26s : %-56s               ║\n", "CPF DO DESTINATÁRIO", aux->entrega->destinatario->id);
         printf("║ %-26s : %-56s               ║\n", "TELEFONE DO DESTINATÁRIO", aux->entrega->destinatario->telefone);
         printf("║ %-27s : %-56s               ║\n", "ENDEREÇO DO DESTINATÁRIO", aux->entrega->destinatario->endereco);
         printf("║ %-26s : %-56s               ║\n", "EMAIL DO DESTINATÁRIO", aux->entrega->destinatario->email);
-        printf("║ %-26s : %-56s               ║\n", "SEXO DO DESTINATÁRIO", aux->entrega->destinatario->sexo);
         printf("║ %-27s : %-56s               ║\n", "HORA DA DEVOLUÇÃO", aux->entrega->horaEntrega);
         printf("║ %-27s : %-56s               ║\n", "DATA DA DEVOLUÇÃO", aux->entrega->dataEntrega);
         printf("║ %-25s : %-56s               ║\n", "STATUS", aux->entrega->status);
