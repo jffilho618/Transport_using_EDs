@@ -146,7 +146,8 @@ void menu_principal()
     printf("╠══════════════════════════════════════╣\n");
     printf("║ [1] MENU DO CLIENTE                  ║\n");
     printf("║ [2] MENU ENTREGAS                    ║\n");
-    printf("║ [3] SOBRE                            ║\n");
+    printf("║ [3] SCORE TRANSPO                    ║\n");
+    printf("║ [4] SOBRE                            ║\n");
     printf("║ [0] SAIR                             ║\n");
     printf("╚══════════════════════════════════════╝\n\n");
 }
@@ -841,7 +842,7 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
                 entrega->remetente_pessoa->conta_entregas++;
                 entrega->horaEntrega = obter_hora_atual();
                 entrega->dataEntrega = obter_data_atual();
-                entrega->score += 5;
+                entrega->score = 5;
                 add_inicio_entrega(historico_entregas, entrega);
             } else {
                 printf("Falha na entrega, movendo para pilha_nao_entregues\n");
@@ -874,7 +875,7 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
                 entrega->remetente_pessoa->conta_entregas++;
                 entrega->horaEntrega = obter_hora_atual();
                 entrega->dataEntrega = obter_data_atual();
-                entrega->score += 3;
+                entrega->score = 3;
                 add_inicio_entrega(historico_entregas, entrega);
             } else {
                 printf("Falha na entrega da pilha, movendo para lista_devolucao\n");
@@ -886,9 +887,7 @@ void realizar_entrega(Fila *fila, int *conta_entregas, No_simples_entregas **his
                 strcpy(entrega->status, "DEVOLVIDO");
                 entrega->horaEntrega = obter_hora_atual();
                 entrega->dataEntrega = obter_data_atual();
-                if (entrega->score > 0) {
-                    entrega->score -= 1;
-                }
+                entrega->score = -1;
                 add_inicio_entrega(lista_devolucao, entrega);
             }
         }
@@ -1060,3 +1059,32 @@ void historico_devolucao(No_simples_entregas *lista){
         aux = aux->prox;
     }
 }
+
+void calcular_media_score(No_simples_entregas *lista, No_simples_entregas *lista_devolucao){
+    if (lista == NULL){
+        printf("NÃO EXISTEM ENTREGAS REALIZADAS!\n");
+        return;
+    }
+
+    No_simples_entregas *aux = lista;
+    float media = 0;
+    float cont = 0;
+    while (aux != NULL)
+    {
+        media += aux->entrega->score;
+        cont++;
+        aux = aux->prox;
+    }
+
+    if (lista_devolucao != NULL){
+        aux = lista_devolucao;
+        while (aux != NULL)
+        {
+            media -= 1;
+            cont++;
+            aux = aux->prox;
+        }
+    }
+    
+    printf("MÉDIA DE SCORE: %.2f\n", media/cont);
+}   
