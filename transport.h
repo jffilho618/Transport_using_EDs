@@ -107,3 +107,5 @@ void realizar_entrega(Fila *fila, int *conta_entregas,No_simples_entregas **hist
 void historico_recebidos_clientes(No_simples_entregas *lista);
 void historico_enviados_clientes(No_simples_entregas *lista);
 void historico_devolucao(No_simples_entregas *lista);
+
+void calcular_media_score(No_simples_entregas *lista, No_simples_entregas *lista_devolucao);

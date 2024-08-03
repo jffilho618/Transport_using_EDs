@@ -8,6 +8,7 @@ int main(){
     int conta_entregas = 0;
     int pos_id = 0;
     int vetor_ids[100];
+    float score;
 
     No_simples_clientes_pessoas *lista_pessoa = cria_lista_pessoa();
     Fila *fila = fila_cria();
@@ -156,6 +157,18 @@ int main(){
                 }
                 
             } while (op8 != 0);
+            break;
+        
+        case 3:
+            calcular_media_score(historico, lista_devolucao);
+            
+            break;
+        
+        case 4:
+            printf("TRABALHO SEM FINS LUCRATIVOS DESENVOLVIDO POR: \n");
+            printf("JOÃO BATISTA DE SOUSA FILHO\n");
+            printf("JONATHAN DOS SANTOS BARBOSA\n");
+            printf("HENRIQUE DOS SANTOS \n");
             break;
 
         default:
